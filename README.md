@@ -44,7 +44,11 @@ Figma pour le maquettage et la réflexion UI/UX de l'application.
 Et utilisation pour l'export en SVG du plan de SketchUp.
 
 
+### Log Format
 
+Le format des logs attendu est le ```CLF Common Log Format```. 
+
+Des outils sont disponible pour fetch la data comme ``` Grafana & ELK ``` qui permette de faire des graphique a partir de la data pur.
 
 ## RoadMAP
 
