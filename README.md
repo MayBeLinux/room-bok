@@ -1,62 +1,66 @@
 
-<p style="text-align: center"><img src="assets/rb-logo.svg" /img>
+<p style="text-align: center"><img src="assets/rb-logo.svg" ></p>
 
 
 
 ## Introduction 
 
+This project allows to do some reservations of room inside the school.
 
-
-
-Le but est de voir nos connaissances dans les différentes étapes de création d'un projet. blablabla
+The purpose is to have a correct UI/UX to see what room are currently book and to make quickly and easily a reservation.
 
 
 ### Stack Technique
 
-La stack est décrite en deux partie
+The stack are describe in two different parts 
 - Frontend
 - Backend
 
 #### Frontend
 
-| Langage    | pourquoi ?                                                                                      |
+| Language    | why ?                                                                                      |
 | ---------- | ----------------------------------------------------------------------------------------------- |
-| Typescript | utlisé pour la conception du front avec des frameworks comme (react)                            |
-| React      | framework permettant de créer des composant réutilisable et facilitant la réutilisation de code |
-| Vite       | serveur de développement rapide et compilation optimisé                                         |
+| Typescript | Use for the conception of the frontend                            |
+| React      | framework able to create component and oranize for each page view |
+| Vite       | development server fast for the compilation and optimize                                         |
 
 #### Backend
 
-| Langage    | pourquoi ?                                                                   |
+| Language    | why ?                                                                   |
 | ---------- | ---------------------------------------------------------------------------- |
-| Typescript | permet de crée tout le backend et logique métier                             |
-| ORM        | librairies utilisé pour faire des call SQL sans passer par des commandes SQL |
+| Typescript | allows to create all the backend logic                             |
+| ORM        | library use to make SQL request, without to write manually SQL |
 
+
+#### Third software
+
+| Language    | why ?                                                                   |
+| ---------- | ---------------------------------------------------------------------------- |
+| Postmann | To test different http verb for the backend                              |
 
 #### Base De Donnée 
 
-Utilisation de Supabase (PostgreSQL) pour la base de donnée.
-
+Use of "Supabase" with PostgreSQL
 
 #### Sketchup
-Sketchup pour la création et visualisation de la vue 2D du bâtiment. 
+
+Sketchup is to create the 2D school diagram
 
 #### Figma
 
-Figma pour le maquettage et la réflexion UI/UX de l'application.
+Figma for the modeling UI/UX and to create and iterate for each component
 
-Et utilisation pour l'export en SVG du plan de SketchUp.
-
+And to export to SVG extension file the plan of the school
 
 ### Log Format
 
-Le format des logs attendu est le ```CLF Common Log Format```. 
+Is the log format expected **CLF Common Log Format**. 
 
-Des outils sont disponible pour fetch la data comme ``` Grafana & ELK ``` qui permette de faire des graphique a partir de la data pur.
+Some tools are available to fetch the date **Grafana & ELK** who allows to do some graphical chart from the data.
 
 ## RoadMAP
 
 - [ ]Conception (MCD / UML)
 - [ ]Backend (Architecture / ORM Relation BDD / API REST)
 - [ ]Frontend (Communication / Navigation / Interfacage)
-- [ ] Réservation + Sécurité (Authentification / Gestion des droits)
+- [ ] Reservation + Security (Authentification / Users Access etc...)
