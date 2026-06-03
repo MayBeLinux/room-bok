@@ -61,6 +61,7 @@ Some tools are available to fetch the date **Grafana & ELK** who allows to do so
 ## RoadMAP
 
 - [ ] Conception (MCD / UML)
+- [ ] Documentation (Style Guide / Postmann )
 - [ ] Backend (Architecture / ORM Relation BDD / API REST)
 - [ ] Frontend (Communication / Navigation / Interfacage)
 - [ ] Reservation + Security (Authentification / Users Access etc...)
