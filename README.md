@@ -1,7 +1,11 @@
 
+<p style="text-align: center"><img src="assets/rb-logo.svg" /img>
+
+
+
 ## Introduction 
 
-Le but est de faire une application (client léger) permettant de pouvoir gérer la réservation des salles dans un bâtiment et ainsi aussi gérer le matériel qui sera réservé pour cette salle inclus.
+
 
 
 Le but est de voir nos connaissances dans les différentes étapes de création d'un projet. blablabla
