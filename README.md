@@ -52,9 +52,7 @@ Des outils sont disponible pour fetch la data comme ``` Grafana & ELK ``` qui pe
 
 ## RoadMAP
 
-- Faire la base de données 
-- Création d'un bâtiment dans Sketchup
-- Maquettes Figma
-- Application du design Figma --> Code Front
-- Création du Backend
-- 
+- [ ]Conception (MCD / UML)
+- [ ]Backend (Architecture / ORM Relation BDD / API REST)
+- [ ]Frontend (Communication / Navigation / Interfacage)
+- [ ] Réservation + Sécurité (Authentification / Gestion des droits)
