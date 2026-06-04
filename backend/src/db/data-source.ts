@@ -1,5 +1,7 @@
-import { DataSource } from "typeorm/browser/data-source/index.js"
-require("dotenv").config()
+import "reflect-metadata"
+import { DataSource } from "typeorm"
+import * as dotenv from "dotenv"
+dotenv.config()
 
 import { User } from "../entity/User"
 import { Booking } from "../entity/Booking"
@@ -7,7 +9,8 @@ import { Building } from "../entity/Building"
 import { Classroom } from "../entity/Classroom"
 import { ClassroomEquipment } from "../entity/ClassroomEquipment"
 import { Equipment } from "../entity/Equipment"
-
+import { Role } from "../entity/Role"
+import { Floor } from "../entity/Floor"
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -16,9 +19,9 @@ export const AppDataSource = new DataSource({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-    synchronize: true,
-    logging: false,
-    entities: [User, Booking, Building, Classroom, ClassroomEquipment, Equipment],
-    migrations: [],
+    synchronize: false,
+    logging: true,
+    entities: [User, Booking, Building, Classroom, ClassroomEquipment, Equipment, Role, Floor],
+    migrations: ["src/migration/*.ts"],
     subscribers: [],
 })
