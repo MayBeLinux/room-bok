@@ -10,6 +10,11 @@ This project allows to do some reservations of room inside the school.
 The purpose is to have a correct UI/UX to see what room are currently book and to make quickly and easily a reservation.
 
 
+### Backend Structure
+
+<p style="text-align: center"><img src="assets/backend-structure.svg" ></p>
+
+
 ### Stack Technique
 
 The stack are describe in two different parts 
