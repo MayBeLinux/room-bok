@@ -3,15 +3,6 @@ import { DataSource } from "typeorm"
 import * as dotenv from "dotenv"
 dotenv.config()
 
-import { User } from "../entity/User"
-import { Booking } from "../entity/Booking"
-import { Building } from "../entity/Building"
-import { Classroom } from "../entity/Classroom"
-import { ClassroomEquipment } from "../entity/ClassroomEquipment"
-import { Equipment } from "../entity/Equipment"
-import { Role } from "../entity/Role"
-import { Floor } from "../entity/Floor"
-
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: process.env.DB_HOST,
@@ -21,7 +12,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_DATABASE,
     synchronize: false,
     logging: true,
-    entities: [User, Booking, Building, Classroom, ClassroomEquipment, Equipment, Role, Floor],
+    entities: ["src/entity/*.ts"],
     migrations: ["src/migration/*.ts"],
     subscribers: [],
 })
