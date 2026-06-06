@@ -1,8 +1,10 @@
 import cors from "cors";
 import express, { type Request, type Response } from "express";
 import { AppDataSource } from "./db/data-source";
+
 // Import Routes
 import rolesRoutes from "./routes/role.routes";
+import floorRoutes from "./routes/floor.routes"
 
 const app = express();
 const port = 3000;
@@ -15,7 +17,11 @@ app.use(
 );
 app.use(express.json());
 
+// --------- ROUTES ----------
 app.use("/api", rolesRoutes);
+app.use("/api", floorRoutes)
+//----------------------------
+
 
 app.get("/", (_req: Request, res: Response) => {
 	res.send("Bonjour, le backend rooms-management tourne !");
