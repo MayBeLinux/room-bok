@@ -1,5 +1,8 @@
 import cors from "cors";
 import express, { type Request, type Response } from "express";
+import { AppDataSource } from "./db/data-source";
+// Import Routes
+import rolesRoutes from "./routes/role.routes";
 
 const app = express();
 const port = 3000;
@@ -10,13 +13,21 @@ app.use(
 		credentials: true,
 	}),
 );
-
 app.use(express.json());
+
+app.use("/api", rolesRoutes);
 
 app.get("/", (_req: Request, res: Response) => {
 	res.send("Bonjour, le backend rooms-management tourne !");
 });
 
-app.listen(port, () => {
-	console.log(`Serveur démarré sur http://localhost:${port}`);
-});
+AppDataSource.initialize()
+	.then(() => {
+		app.listen(port, () => {
+			console.log(`Server is running on http://localhost:${port}`);
+		});
+	})
+	.catch((err) => {
+		console.error("Error during Data Source initialization:", err);
+	});
+
