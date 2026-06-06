@@ -5,6 +5,8 @@ import { AppDataSource } from "./db/data-source";
 // Import Routes
 import rolesRoutes from "./routes/role.routes";
 import floorRoutes from "./routes/floor.routes"
+import roomRoutes from "./routes/room.routes";
+import buildingRoutes from "./routes/building.routes";
 
 const app = express();
 const port = 3000;
@@ -20,6 +22,8 @@ app.use(express.json());
 // --------- ROUTES ----------
 app.use("/api", rolesRoutes);
 app.use("/api", floorRoutes)
+app.use("/api", roomRoutes);
+app.use("/api", buildingRoutes);
 //----------------------------
 
 
