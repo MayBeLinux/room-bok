@@ -1,10 +1,10 @@
 import { Router, Request, Response } from 'express';
 
 // Import Controller
-import { roleController } from '../controllers/roleController';
+import { roomController } from '../controllers/roomController';
 
 const router = Router();
 
-router.get('/roles', roleController.listRoles);
+router.get('/rooms', roomController.listRooms);
 
 export default router;

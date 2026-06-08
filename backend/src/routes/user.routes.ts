@@ -1,10 +1,10 @@
 import { Router, Request, Response } from 'express';
 
 // Import Controller
-import { roleController } from '../controllers/roleController';
+import { userController } from '../controllers/userController';
 
 const router = Router();
 
-router.get('/roles', roleController.listRoles);
+router.get('/users', userController.listUsers);
 
 export default router;
