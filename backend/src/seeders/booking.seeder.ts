@@ -5,10 +5,18 @@ import { Booking } from '../entity/Booking'
 
 export async function seedBooking() {
     const bookingRepository = AppDataSource.getRepository(Booking)
+
+    // To have the possibilies to create a Booking table, i must create a userData and insert it
+    // maybe try to create new random data
+    const userData = {id : 1, firstName: 'Christophe' , lastName: 'Test', email: 'test@gmail.com', password: 'Test Test'}
     const bookingsData = [
-        {user_id: 'return joint with user table'},
-        {stated_at: Date.now()},
-        {ended_at: Date.now() - 120},
+        {user: userData, startedAt: Date.now(), endedAt: Date.now()},
+        {user: userData, startedAt: Date.now(), endedAt: Date.now()},
+        {user: userData, startedAt: Date.now(), endedAt: Date.now()},
     ]
-    
+    for (const bookingData of bookingsData) {
+        const booking = bookingRepository.create(bookingData)
+        await bookingRepository.save(booking)
+        console.log("Booking created ", bookingData )
+    }
 }
