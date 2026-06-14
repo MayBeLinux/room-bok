@@ -24,7 +24,7 @@ export async function seedUsers() {
 
     for (const userData of usersData) {
         if (!userData.role) continue;
-        const user = userRepository.create(userData);
+        const user = userRepository.create({ ...userData, role: userData.role });
         await userRepository.save(user);
         console.log("User created:", user.email);
     }
