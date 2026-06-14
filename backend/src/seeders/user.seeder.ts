@@ -7,10 +7,10 @@ export async function seedUsers() {
     const userRepository = AppDataSource.getRepository(User);
 
     const usersData = [
-        {first_name: 'Joshua'},
-        {last_name: 'Kieffer'},
-        {email: 'joshutinel@gmail.com'},
-        {password: 'test1234'},
+        {first_name: 'Antoine', last_name: 'Parsing', email: 'antoine@test.com', password: 'password'},
+        {first_name: 'John', last_name: 'Doe', email: 'john.doe@test.com', password: 'password'},
+        {first_name: 'Jane', last_name: 'Smith', email: 'jane.smith@test.com', password: 'password'},
+        {first_name: 'Christophe', last_name: 'Litup', email: 'christophe@test.com', password: 'password'},
     ]
     for (const userData of usersData) {
         const user = userRepository.create(userData)
