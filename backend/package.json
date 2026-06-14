@@ -12,7 +12,7 @@
 		"migration:run": "npm run typeorm -- migration:run -d src/db/data-source.ts",
 		"migration:revert": "npm run typeorm -- migration:revert -d src/db/data-source.ts",
 		"migration:show": "npm run typeorm -- migration:show -d src/db/data-source.ts",
-		"seed": "ts-node src/seeders/seed.ts"
+		"seed": "ts-node src/seeders/index.ts"
 	},
 	"dependencies": {
 		"bcrypt": "^6.0.0",
