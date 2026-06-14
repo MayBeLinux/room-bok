@@ -1,22 +1,50 @@
-// This file create the initial booking data to test the DB.
+// This file creates the initial bookings to test the DB.
 
-import { AppDataSource } from '../db/data-source';
-import { Booking } from '../entity/Booking'
+import { AppDataSource } from "../db/data-source";
+import { Booking } from "../entity/Booking";
+import { User } from "../entity/User";
+import { Classroom } from "../entity/Classroom";
 
-export async function seedBooking() {
-    const bookingRepository = AppDataSource.getRepository(Booking)
+export async function seedBookings() {
+    const bookingRepository = AppDataSource.getRepository(Booking);
+    const userRepository = AppDataSource.getRepository(User);
+    const classroomRepository = AppDataSource.getRepository(Classroom);
 
-    // To have the possibilies to create a Booking table, i must create a userData and insert it
-    // maybe try to create new random data
-    const userData = {id : 1, firstName: 'Christophe' , lastName: 'Test', email: 'test@gmail.com', password: 'Test Test'}
+    const users = await userRepository.find();
+    const classrooms = await classroomRepository.find();
+
+    if (users.length === 0 || classrooms.length === 0) {
+        console.warn("No users or classrooms found — skipping booking seeding.");
+        return;
+    }
+
+    const now = new Date();
+    const oneHour = 60 * 60 * 1000;
+
     const bookingsData = [
-        {user: userData, startedAt: Date.now(), endedAt: Date.now()},
-        {user: userData, startedAt: Date.now(), endedAt: Date.now()},
-        {user: userData, startedAt: Date.now(), endedAt: Date.now()},
-    ]
+        {
+            user: users[0],
+            classroom: classrooms[0],
+            startedAt: new Date(now.getTime() + oneHour),
+            endedAt: new Date(now.getTime() + 2 * oneHour),
+        },
+        {
+            user: users[1 % users.length],
+            classroom: classrooms[1 % classrooms.length],
+            startedAt: new Date(now.getTime() + 3 * oneHour),
+            endedAt: new Date(now.getTime() + 4 * oneHour),
+        },
+        {
+            user: users[2 % users.length],
+            classroom: classrooms[2 % classrooms.length],
+            startedAt: new Date(now.getTime() + 5 * oneHour),
+            endedAt: new Date(now.getTime() + 6 * oneHour),
+        },
+    ];
+
     for (const bookingData of bookingsData) {
-        const booking = bookingRepository.create(bookingData)
-        await bookingRepository.save(booking)
-        console.log("Booking created ", bookingData )
+        const booking = bookingRepository.create(bookingData);
+        await bookingRepository.save(booking);
+        console.log(`Booking created for ${booking.user.email} in ${booking.classroom.nameRoom}`);
     }
 }
