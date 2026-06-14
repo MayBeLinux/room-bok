@@ -1,20 +1,31 @@
-// This file test create a seeder data to test the db 
+// This file creates initial users to test the DB.
 
+import bcrypt from "bcrypt";
 import { AppDataSource } from "../db/data-source";
 import { User } from "../entity/User";
+import { Role } from "../entity/Role";
 
 export async function seedUsers() {
     const userRepository = AppDataSource.getRepository(User);
+    const roleRepository = AppDataSource.getRepository(Role);
+
+    const adminRole = await roleRepository.findOneBy({ name: "Administrator" });
+    const teacherRole = await roleRepository.findOneBy({ name: "Teacher" });
+    const studentRole = await roleRepository.findOneBy({ name: "Student" });
+
+    const hashedPassword = await bcrypt.hash("password", 10);
 
     const usersData = [
-        {first_name: 'Antoine', last_name: 'Parsing', email: 'antoine@test.com', password: 'password'},
-        {first_name: 'John', last_name: 'Doe', email: 'john.doe@test.com', password: 'password'},
-        {first_name: 'Jane', last_name: 'Smith', email: 'jane.smith@test.com', password: 'password'},
-        {first_name: 'Christophe', last_name: 'Litup', email: 'christophe@test.com', password: 'password'},
-    ]
+        { firstName: "Alice", lastName: "Martin", email: "alice.martin@example.com", password: hashedPassword, role: adminRole },
+        { firstName: "Bob", lastName: "Durand", email: "bob.durand@example.com", password: hashedPassword, role: teacherRole },
+        { firstName: "Claire", lastName: "Dupont", email: "claire.dupont@example.com", password: hashedPassword, role: teacherRole },
+        { firstName: "David", lastName: "Leroy", email: "david.leroy@example.com", password: hashedPassword, role: studentRole },
+    ];
+
     for (const userData of usersData) {
-        const user = userRepository.create(userData)
-        await userRepository.save(user)
-        console.log("User create", user)
+        if (!userData.role) continue;
+        const user = userRepository.create(userData);
+        await userRepository.save(user);
+        console.log("User created:", user.email);
     }
 }
