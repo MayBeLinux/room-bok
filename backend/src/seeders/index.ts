@@ -4,6 +4,7 @@ import { seedUsers } from "./user.seeder";
 import { seedBuildings } from "./building.seeder";
 import { seedClassrooms } from "./classroom.seeder";
 import { seedEquipments } from "./equipment.seeder";
+import { seedClassroomEquipments } from "./classroomEquipment.seeder";
 import { seedBookings } from "./booking.seeder";
 
 async function runSeeders() {
@@ -19,6 +20,7 @@ async function runSeeders() {
         await seedBuildings();
         await seedClassrooms();
         await seedEquipments();
+        await seedClassroomEquipments();
         await seedBookings();
 
         console.log("Seeders finished.");
