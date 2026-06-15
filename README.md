@@ -1,72 +1,163 @@
+# Rooms Management
 
-<p style="text-align: center"><img src="assets/rb-logo.svg" ></p>
+![Logo](assets/rb-logo.svg)
 
+## Introduction
 
+Rooms Management is a school room reservation application. It allows students and teachers to view classroom availability and book rooms quickly through a clean UI/UX.
 
-## Introduction 
+## Features
 
-This project allows to do some reservations of room inside the school.
+- Browse buildings, floors, classrooms and equipments
+- Create and manage room reservations (bookings)
+- Role-based access (Administrator, Teacher, Student)
+- REST API consumed by a Vue 3 frontend
+- PostgreSQL persistence via Supabase
 
-The purpose is to have a correct UI/UX to see what room are currently book and to make quickly and easily a reservation.
+## Project Structure
 
+```text
+rooms-management/
+├── assets/                 # Logos, diagrams, floor plans
+├── backend/
+│   └── src/
+│       ├── app.ts          # Express entrypoint
+│       ├── controllers/    # Request handlers
+│       ├── db/             # TypeORM data source
+│       ├── dto/            # Zod schemas (input validation)
+│       ├── entity/         # TypeORM entities
+│       ├── migration/      # SQL migrations
+│       ├── repositories/   # Data access layer
+│       ├── routes/         # Express routers
+│       ├── seeders/        # DB seeders for testing
+│       └── services/       # Business logic
+├── frontend/
+│   └── src/                # Vue 3 + Vite app
+├── doc/
+│   ├── backend_doc/        # Roadmap, API routes
+│   └── frontend_doc/
+└── README.md
+```
 
-### Backend Structure
+## Architecture
 
-<p style="text-align: center"><img src="assets/backend-structure.svg" ></p>
+```mermaid
+flowchart LR
+  User[Browser] --> FE[Vue 3 + Vite]
+  FE -->|REST / JSON| BE[Express API]
+  BE -->|TypeORM| DB[(PostgreSQL / Supabase)]
+  BE --> Auth[JWT + bcrypt]
+```
 
+## Stack
 
-### Stack Technique
+### Frontend
 
-The stack are describe in two different parts 
-- Frontend
-- Backend
+| Tech       | Why ?                                                    |
+| ---------- | -------------------------------------------------------- |
+| TypeScript | Type-safe frontend code                                  |
+| Vue 3      | Reactive component framework                             |
+| Vite       | Fast dev server and build tool                           |
 
-#### Frontend
+### Backend
 
-| Language    | why ?                                                                                      |
-| ---------- | ----------------------------------------------------------------------------------------------- |
-| Typescript | Use for the conception of the frontend                            |
-| React      | framework able to create component and oranize for each page view |
-| Vite       | development server fast for the compilation and optimize                                         |
+| Tech       | Why ?                                                    |
+| ---------- | -------------------------------------------------------- |
+| TypeScript | Type-safe backend code                                   |
+| Express    | Minimal HTTP server framework                            |
+| TypeORM    | ORM for PostgreSQL, avoids writing raw SQL               |
+| Zod        | Runtime validation of incoming payloads                  |
+| bcrypt     | Password hashing                                         |
+| JWT        | Stateless authentication tokens                          |
 
-#### Backend
+### Database
 
-| Language    | why ?                                                                   |
-| ---------- | ---------------------------------------------------------------------------- |
-| Typescript | allows to create all the backend logic                             |
-| ORM        | library use to make SQL request, without to write manually SQL |
+Supabase-hosted PostgreSQL.
 
+### Tooling
 
-#### Third software
+| Tool     | Why ?                                       |
+| -------- | ------------------------------------------- |
+| Postman  | Manual testing of HTTP endpoints            |
+| Sketchup | 2D school diagrams                          |
+| Figma    | UI/UX design and SVG export of school plans |
 
-| Language    | why ?                                                                   |
-| ---------- | ---------------------------------------------------------------------------- |
-| Postmann | To test different http verb for the backend                              |
+## Backend Structure
 
-#### Base De Donnée 
+![Backend structure](assets/backend-structure.svg)
 
-Use of "Supabase" with PostgreSQL
+## Log Format
 
-#### Sketchup
+The expected log format is **CLF (Common Log Format)**.
 
-Sketchup is to create the 2D school diagram
+Logs can be ingested by **Grafana & ELK** to produce charts and dashboards.
 
-#### Figma
+## Getting Started
 
-Figma for the modeling UI/UX and to create and iterate for each component
+### Prerequisites
 
-And to export to SVG extension file the plan of the school
+- Node.js 20+
+- npm
+- A PostgreSQL database (a Supabase project works)
 
-### Log Format
+### 1. Clone
 
-Is the log format expected **CLF Common Log Format**. 
+```bash
+git clone <repo-url>
+cd rooms-management
+```
 
-Some tools are available to fetch the date **Grafana & ELK** who allows to do some graphical chart from the data.
+### 2. Backend
+
+```bash
+cd backend
+npm install
+```
+
+Create a `.env` file in `backend/` with the following variables:
+
+```dotenv
+DB_HOST=your-db-host
+DB_PORT=5432
+DB_USERNAME=your-db-user
+DB_PASSWORD=your-db-password
+DB_DATABASE=your-db-name
+```
+
+Run the migrations and seed the database:
+
+```bash
+npm run migration:run
+npm run seed
+```
+
+Start the dev server (listens on `http://localhost:3000`):
+
+```bash
+npm run dev
+```
+
+The API is exposed under the `/api` prefix.
+
+### 3. Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The Vite dev server listens on `http://localhost:5173` and is allowed by the backend CORS configuration.
+
+## Documentation
+
+- API routes: [`doc/backend_doc/route-api.md`](doc/backend_doc/route-api.md)
+- Backend roadmap: [`doc/backend_doc/ROADMAP.md`](doc/backend_doc/ROADMAP.md)
 
 ## RoadMAP
 
 - [ ] Conception (MCD / UML)
-- [ ] Documentation (Style Guide / Postmann )
+- [ ] Documentation (Style Guide / Postman)
 - [ ] Backend (Architecture / ORM Relation BDD / API REST)
-- [ ] Frontend (Communication / Navigation / Interfacage)
-- [ ] Reservation + Security (Authentification / Users Access etc...)
+- [ ] Frontend (Communication / Navigation / Interfacing)
+- [ ] Reservation + Security (Authentication / User Access)
