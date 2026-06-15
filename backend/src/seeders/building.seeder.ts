@@ -15,14 +15,27 @@ export async function seedBuildings() {
     ];
 
     for (const buildingData of buildingsData) {
-        const building = buildingRepository.create({ name: buildingData.name });
-        await buildingRepository.save(building);
-        console.log("Building created:", building.name);
+        let building = await buildingRepository.findOneBy({ name: buildingData.name });
+        if (building) {
+            console.log("Building already exists:", building.name);
+        } else {
+            building = buildingRepository.create({ name: buildingData.name });
+            await buildingRepository.save(building);
+            console.log("Building created:", building.name);
+        }
 
         for (const level of buildingData.floors) {
-            const floor = floorRepository.create({ level, building });
-            await floorRepository.save(floor);
-            console.log(`  Floor created: level ${level} in ${building.name}`);
+            const existingFloor = await floorRepository.findOne({
+                where: { level, building: { id: building.id } },
+                relations: ["building"],
+            });
+            if (existingFloor) {
+                console.log(`  Floor already exists: level ${level} in ${building.name}`);
+            } else {
+                const floor = floorRepository.create({ level, building });
+                await floorRepository.save(floor);
+                console.log(`  Floor created: level ${level} in ${building.name}`);
+            }
         }
     }
 }

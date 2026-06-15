@@ -19,13 +19,21 @@ export async function seedClassrooms() {
 
     for (const floor of floors) {
         for (const name of classroomNames) {
-            const classroom = classroomRepository.create({
-                nameRoom: name,
-                floor,
-                maintenance: false,
+            const existingClassroom = await classroomRepository.findOne({
+                where: { nameRoom: name, floor: { id: floor.id } },
+                relations: ["floor"],
             });
-            await classroomRepository.save(classroom);
-            console.log(`Classroom created: ${name} (floor ${floor.level})`);
+            if (existingClassroom) {
+                console.log(`Classroom already exists: ${name} (floor ${floor.level})`);
+            } else {
+                const classroom = classroomRepository.create({
+                    nameRoom: name,
+                    floor,
+                    maintenance: false,
+                });
+                await classroomRepository.save(classroom);
+                console.log(`Classroom created: ${name} (floor ${floor.level})`);
+            }
         }
     }
 }

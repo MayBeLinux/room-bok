@@ -15,8 +15,13 @@ export async function seedEquipments() {
     ];
 
     for (const equipmentData of equipmentsData) {
-        const equipment = equipmentRepository.create(equipmentData);
-        await equipmentRepository.save(equipment);
-        console.log("Equipment created:", equipment.name);
+        const existingEquipment = await equipmentRepository.findOneBy({ name: equipmentData.name });
+        if (existingEquipment) {
+            console.log("Equipment already exists:", existingEquipment.name);
+        } else {
+            const equipment = equipmentRepository.create(equipmentData);
+            await equipmentRepository.save(equipment);
+            console.log("Equipment created:", equipment.name);
+        }
     }
 }

@@ -43,8 +43,22 @@ export async function seedBookings() {
     ];
 
     for (const bookingData of bookingsData) {
-        const booking = bookingRepository.create(bookingData);
-        await bookingRepository.save(booking);
-        console.log(`Booking created for ${booking.user.email} in ${booking.classroom.nameRoom}`);
+        const existingBooking = await bookingRepository.findOne({
+            where: {
+                user: { id: bookingData.user.id },
+                classroom: { id: bookingData.classroom.id },
+                startedAt: bookingData.startedAt,
+            },
+            relations: ["user", "classroom"],
+        });
+        if (existingBooking) {
+            console.log(
+                `Booking already exists for ${bookingData.user.email} in ${bookingData.classroom.nameRoom}`,
+            );
+        } else {
+            const booking = bookingRepository.create(bookingData);
+            await bookingRepository.save(booking);
+            console.log(`Booking created for ${booking.user.email} in ${booking.classroom.nameRoom}`);
+        }
     }
 }

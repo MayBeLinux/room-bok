@@ -23,9 +23,14 @@ export async function seedUsers() {
     ];
 
     for (const userData of usersData) {
+        const existingUser = await userRepository.findOneBy({ email: userData.email });
+        if (existingUser) {
+            console.log("User already exists:", existingUser.email);
+        } else {
         if (!userData.role) continue;
         const user = userRepository.create({ ...userData, role: userData.role });
         await userRepository.save(user);
         console.log("User created:", user.email);
+        }    
     }
 }

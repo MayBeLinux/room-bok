@@ -12,8 +12,13 @@ export async function seedRoles() {
         { name: 'Student' },
     ];
     for (const roleData of rolesData) {
+    const existingRole = await roleRepository.findOneBy({ name: roleData.name });
+        if (existingRole) {
+            console.log('Role already exists:', existingRole);
+        } else {
         const role = roleRepository.create(roleData);
         await roleRepository.save(role);
         console.log('Role created:', role);
+        }
     }
 }
