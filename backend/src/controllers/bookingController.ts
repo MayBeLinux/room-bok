@@ -1,6 +1,7 @@
 // Booking return a list of booking with date start and date end.
 // ******************
 // - user_id        *
+// - classroom_id   *
 // - started_at     *
 // - ended_at       *
 // ******************
@@ -26,5 +27,31 @@ export const bookingController = {
         });
         await bookingRepository.save(createBooking);
         res.status(201).json(createBooking);
+    },
+    deleteBookings: async (req: Request, res: Response) => {
+        const id = req.params.id
+        const deleted = await bookingRepository.delete(id)
+
+        if (deleted.affected === 0 ) {
+            res.status(404).json(deleted)
+        } else {
+            res.status(204).json(deleted)
+        }
+    },
+    updateBookings: async (req: Request, res: Response) => {
+        const id = req.params.id
+        const { user_id, classroom_id, started_at, ended_at } = req.body
+        const update = await bookingRepository.update(id, {
+            user: user_id ? { id: user_id } : undefined,
+            classroom: classroom_id ? { id: classroom_id } : undefined,
+            startedAt: started_at,
+            endedAt: ended_at,
+        })
+
+        if (update.affected === 0) {
+            res.status(404).json(update)
+        } else {
+            res.status(200).json(update)
+        }
     }
 }
