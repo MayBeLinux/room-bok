@@ -9,7 +9,7 @@
 import { AppDataSource } from '../db/data-source';
 import { Request , Response } from 'express';
 import { User } from '../entity/User';
-import { createUserSchema } from '../dto/CreateUserDto';
+import { createUserSchema } from '../dto/UserDto';
 
 const userRepository = AppDataSource.getRepository(User)
 
