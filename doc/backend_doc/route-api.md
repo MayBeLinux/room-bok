@@ -125,3 +125,15 @@ The server **always** replies with a status code. It tells the client whether th
 
 > The column `data send` describes the request **body** (or `none` for GET / DELETE). The column `data receive` describes the response **body** shape returned by the API.
 
+| Method | URI                       | data send ? | data receive ? | why ?                                             |
+| ------ | ------------------------- | ----------- | -------------- | ------------------------------------------------- |
+|        | **INFORMATIONS**          | ---         | ---            | ---                                               |
+| GET    | /api/buildings            | `nothing`   | `json file`    | Receive the list of buildings                     |
+| GET    | /api/rooms                | `nothing`   | `json file`    | Receive the list of rooms                         |
+| GET    | /api/equipments           | `nothing`   | `json file`    | Receive the list of equipments                    |
+| GET    | /api/floors               | `nothing`   | `json file`    | Receive the list of floors                        |
+| GET    | /api/bookings             | `nothing`   | `json file`    | Receive the list of the reservation               |
+| GET    | /api/users                | `nothing`   | `json file`    | Receive the list of User                          |
+| GET    | /api/classroom-equipments | `nothing`   | `json file`    | Receive the list of equipments inside a classroom |
+|        | **USERS**                 | ---         | ---            | ---                                               |
+| GET    | /api/roles                | `nothing`   | `json file`    | Return the list of the role possible              |
