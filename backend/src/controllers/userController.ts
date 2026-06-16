@@ -9,6 +9,7 @@
 import { AppDataSource } from '../db/data-source';
 import { Request , Response } from 'express';
 import { User } from '../entity/User';
+import { createUserSchema } from '../dto/CreateUserDto';
 
 const userRepository = AppDataSource.getRepository(User)
 
@@ -18,7 +19,11 @@ export const userController = {
         res.json(users);
     },
     createUsers: async (req: Request, res: Response) => {
-        const { first_name, last_name, email, password, role_id } = req.body
+        const parsed = createUserSchema.safeParse(req.body)
+        if (!parsed.success) {
+            return res.status(400).json({ errors: parsed.error.issues })
+        }
+        const { first_name, last_name, email, password, role_id } = parsed.data
         const createUser = userRepository.create({
             firstName: first_name,
             lastName: last_name,
