@@ -9,14 +9,14 @@ Coche les cases au fur et à mesure pour visualiser l'avancement.
 
 Pour chaque ressource: ajouter `create`, `read (one)`, `update`, `delete` en plus du `list` déjà en place. Brancher les routes correspondantes (`POST`, `GET /:id`, `PATCH /:id`, `DELETE /:id`).
 
-- [ ] Booking
-- [ ] Building
-- [ ] Floor
-- [ ] Classroom
-- [ ] Equipment
-- [ ] ClassroomEquipment
-- [ ] Role
-- [ ] User
+- [X] Booking
+- [X] Building
+- [X] Floor
+- [X] Classroom
+- [X] Equipment
+- [X] ClassroomEquipment
+- [X] Role
+- [X] User
 
 ## Phase 2 — Validation des entrées avec Zod
 
@@ -63,11 +63,11 @@ Sortir la logique métier des controllers vers `services/`. Le controller ne fai
 
 Peupler la base avec des données de test cohérentes.
 
-- [ ] Seed des rôles
-- [ ] Seed des bâtiments et étages
-- [ ] Seed des salles et équipements
-- [ ] Seed des utilisateurs de test
-- [ ] Seed de quelques bookings d'exemple
+- [X] Seed des rôles
+- [X] Seed des bâtiments et étages
+- [X] Seed des salles et équipements
+- [X] Seed des utilisateurs de test
+- [X] Seed de quelques bookings d'exemple
 
 ## Phase 7 — Préparation au frontend
 
