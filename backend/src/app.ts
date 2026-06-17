@@ -1,5 +1,7 @@
 import cors from "cors";
 import express, { type Request, type Response } from "express";
+import { readFileSync } from "fs";
+import { join } from "path";
 import { AppDataSource } from "./db/data-source";
 
 // Import Routes
@@ -13,12 +15,18 @@ import roomEquipmentRoutes from "./routes/roomEquipment.routes";
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
 
+const pkg = JSON.parse(
+	readFileSync(join(__dirname, "..", "package.json"), "utf-8"),
+);
+
 const app = express();
-const port = 3000;
+const port = Number(process.env.PORT) || 3000;
+const corsOrigin = process.env.CORS_ORIGIN ?? "http://localhost:5173";
+const prefix = process.env.API_PREFIX ?? "/api";
 
 app.use(
 	cors({
-		origin: "http://localhost:5173",
+		origin: corsOrigin,
 		credentials: true,
 	}),
 );
@@ -45,7 +53,9 @@ app.get("/", (_req: Request, res: Response) => {
 AppDataSource.initialize()
 	.then(() => {
 		app.listen(port, () => {
-			console.log(`Server is running on http://localhost:${port}`);
+			console.log(
+				`Server ${pkg.name}@${pkg.version} (${process.env.NODE_ENV ?? "development"}) is running on http://localhost:${port}`,
+			);
 		});
 	})
 	.catch((err) => {
