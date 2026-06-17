@@ -11,6 +11,7 @@ import bookingRoutes from "./routes/booking.routes";
 import equipmentRoutes from "./routes/equipment.routes";
 import roomEquipmentRoutes from "./routes/roomEquipment.routes";
 import userRoutes from "./routes/user.routes";
+import authRoutes from "./routes/auth.routes";
 
 const app = express();
 const port = 3000;
@@ -25,6 +26,7 @@ app.use(express.json());
 
 // --------- ROUTES ----------
 const prefix = "/api"
+app.use(prefix, authRoutes);
 app.use(prefix, rolesRoutes);
 app.use(prefix, floorRoutes)
 app.use(prefix, roomRoutes);
