@@ -30,7 +30,7 @@ Créer un DTO par ressource dans `dto/` et un middleware générique `validate(s
 - [ ] DTO Equipment
 - [ ] DTO ClassroomEquipment
 - [ ] DTO Role
-- [ ] DTO User
+- [X] DTO User
 
 ## Phase 3 — Couche service
 

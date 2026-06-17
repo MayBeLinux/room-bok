@@ -7,6 +7,7 @@
 import { AppDataSource } from '../db/data-source';
 import { Request , Response } from 'express';
 import { Classroom } from '../entity/Classroom';
+import { createClassroomSchema, updateClassroomSchema, classroomIdParamSchema   } from '../dto/ClassroomDto'
 
 const roomRepository = AppDataSource.getRepository(Classroom)
 
@@ -25,6 +26,18 @@ export const roomController = {
         await roomRepository.save(createRoom)
         res.status(201).json(createRoom)
     },
+    getRoom: async (req: Request, res: Response) => {
+            const parsedParams = classroomIdParamSchema.safeParse(req.params)
+            if (!parsedParams.success) {
+                return res.status(400).json({ errors: parsedParams.error.issues })
+            }
+            const { id } = parsedParams.data
+            const role = await roomRepository.findOneBy({ id })
+            if (!role) {
+                return res.status(404).json({ message: 'Role not found' })
+            }
+            res.json(role)
+        },
     deleteRooms: async (req: Request, res: Response) => {
         const id = req.params.id
         const deleted = await roomRepository.delete(id)
