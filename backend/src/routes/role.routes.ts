@@ -6,8 +6,9 @@ import { roleController } from '../controllers/roleController';
 const router = Router();
 
 router.get('/roles', roleController.listRoles);
-router.post('/role', roleController.createRoles);
-router.delete('/role/:id', roleController.deleteRoles);
-router.put('/role/:id', roleController.updateRoles);
+router.get('/roles/:id', roleController.getRole);
+router.post('/roles', roleController.createRole);
+router.put('/roles/:id', roleController.updateRole);
+router.delete('/roles/:id', roleController.deleteRole);
 
 export default router;

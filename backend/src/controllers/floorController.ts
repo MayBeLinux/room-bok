@@ -7,6 +7,7 @@
 import { AppDataSource } from '../db/data-source';
 import { Request , Response } from 'express';
 import { Floor } from '../entity/Floor';
+import { createFloorSchema, updateFloorSchema, floorIdParamSchema } from '../dto/FloorDto';
 
 const floorRepository = AppDataSource.getRepository(Floor)
 
@@ -15,28 +16,61 @@ export const floorController = {
         const floors = await floorRepository.find();
         res.json(floors);
     },
-    createFloors: async (req: Request, res: Response) => {
-        const { level, building_id } = req.body
-        const createFloor = floorRepository.create({
-            level,
-            building: { id: building_id },
+    getFloor: async (req: Request, res: Response) => {
+        const parsedParams = floorIdParamSchema.safeParse(req.params)
+        if (!parsedParams.success) {
+            return res.status(400).json({ errors: parsedParams.error.issues })
+        }
+        const { id } = parsedParams.data
+        const floor = await floorRepository.findOne({
+            where: { id },
+            relations: { building: true },
         })
-        await floorRepository.save(createFloor)
-        res.status(201).json(createFloor)
+        if (!floor) {
+            return res.status(404).json({ message: 'Floor not found' })
+        }
+        res.json(floor)
     },
-    deleteFloors: async (req: Request, res: Response) => {
-        const id = req.params.id
-        const deletedFloor = await floorRepository.delete(id)
-
-        if (deletedFloor.affected === 0) {
-            res.status(404).json(deletedFloor)
+    createFloor: async (req: Request, res: Response) => {
+        const parsed = createFloorSchema.safeParse(req.body)
+        if (!parsed.success) {
+            return res.status(400).json({ errors: parsed.error.issues })
         } else {
-            res.status(204).json(deletedFloor)
+            const { level, building_id } = parsed.data
+            const createFloor = floorRepository.create({
+                level,
+                building: { id: building_id },
+            })
+            await floorRepository.save(createFloor)
+            res.status(201).json(createFloor)
         }
     },
-    updateFloors: async (req: Request, res: Response) => {
-        const id = req.params.id
-        const { level, building_id } = req.body
+    deleteFloor: async (req: Request, res: Response) => {
+        const parsedParams = floorIdParamSchema.safeParse(req.params)
+        if (!parsedParams.success) {
+            return res.status(400).json({ errors: parsedParams.error.issues })
+        } else {
+            const { id } = parsedParams.data
+            const deletedFloor = await floorRepository.delete(id)
+
+            if (deletedFloor.affected === 0) {
+                res.status(404).json(deletedFloor)
+            } else {
+                res.status(204).json(deletedFloor)
+            }
+        }
+    },
+    updateFloor: async (req: Request, res: Response) => {
+        const parsedParams = floorIdParamSchema.safeParse(req.params)
+        if (!parsedParams.success) {
+            return res.status(400).json({ errors: parsedParams.error.issues })
+        }
+        const parsedBody = updateFloorSchema.safeParse(req.body)
+        if (!parsedBody.success) {
+            return res.status(400).json({ errors: parsedBody.error.issues })
+        }
+        const { id } = parsedParams.data
+        const { level, building_id } = parsedBody.data
         const updateFloor = await floorRepository.update(id, {
             level,
             building: building_id ? { id: building_id } : undefined,

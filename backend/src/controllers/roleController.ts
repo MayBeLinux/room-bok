@@ -7,6 +7,8 @@
 import { AppDataSource } from '../db/data-source';
 import { Request , Response } from 'express';
 import { Role } from '../entity/Role';
+import { createRoleSchema, updateRoleSchema, roleIdParamSchema  } from '../dto/RoleDto';
+
 
 const roleRepository = AppDataSource.getRepository(Role)
 export const roleController = {
@@ -14,27 +16,57 @@ export const roleController = {
         const roles = await roleRepository.find();
         res.json(roles);
     },
-    createRoles: async (req: Request, res: Response) => {
-        const { name } = req.body
-        const createRole = roleRepository.create({
-            name
-        })
-        await roleRepository.save(createRole)
-        res.status(201).json(createRole)
+    getRole: async (req: Request, res: Response) => {
+        const parsedParams = roleIdParamSchema.safeParse(req.params)
+        if (!parsedParams.success) {
+            return res.status(400).json({ errors: parsedParams.error.issues })
+        }
+        const { id } = parsedParams.data
+        const role = await roleRepository.findOneBy({ id })
+        if (!role) {
+            return res.status(404).json({ message: 'Role not found' })
+        }
+        res.json(role)
     },
-    deleteRoles: async (req: Request, res: Response) => {
-        const id = req.params.id
-        const deleted = await roleRepository.delete(id)
-
-        if (deleted.affected === 0) {
-            res.status(404).json(deleted)
+    createRole: async (req: Request, res: Response) => {
+        const parsed = createRoleSchema.safeParse(req.body)   
+        if (!parsed.success) {
+            return res.status(400).json({ errors: parsed.error.issues })
         } else {
-            res.status(204).json(deleted)
+            const { name } = parsed.data
+            const createRole = roleRepository.create({
+                name,
+            })
+            await roleRepository.save(createRole)
+            res.status(201).json(createRole)
         }
     },
-    updateRoles: async (req: Request, res: Response) => {
-        const id = req.params.id
-        const { name } = req.body
+    deleteRole: async (req: Request, res: Response) => {
+        const parsedParams = roleIdParamSchema.safeParse(req.params)
+        if (!parsedParams.success) {
+            return res.status(400).json({ errors: parsedParams.error.issues })
+        } else {
+            const { id } = parsedParams.data
+            const deleted = await roleRepository.delete(id)
+
+            if (deleted.affected === 0) {
+                res.status(404).json(deleted)
+            } else {
+                res.status(204).json(deleted)
+            }
+        }
+    },
+    updateRole: async (req: Request, res: Response) => {
+        const parsedParams = roleIdParamSchema.safeParse(req.params)
+        if (!parsedParams.success) {
+            return res.status(400).json({ errors: parsedParams.error.issues })
+        }
+        const parsedBody = updateRoleSchema.safeParse(req.body)
+        if (!parsedBody.success) {
+            return res.status(400).json({ errors: parsedBody.error.issues })
+        }
+        const { id } = parsedParams.data
+        const { name } = parsedBody.data
         const update = await roleRepository.update(id, { name })
 
         if (update.affected === 0) {

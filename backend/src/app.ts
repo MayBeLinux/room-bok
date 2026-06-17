@@ -13,6 +13,7 @@ import bookingRoutes from "./routes/booking.routes";
 import equipmentRoutes from "./routes/equipment.routes";
 import roomEquipmentRoutes from "./routes/roomEquipment.routes";
 import userRoutes from "./routes/user.routes";
+import authRoutes from "./routes/auth.routes";
 
 const pkg = JSON.parse(
 	readFileSync(join(__dirname, "..", "package.json"), "utf-8"),
@@ -32,6 +33,7 @@ app.use(
 app.use(express.json());
 
 // --------- ROUTES ----------
+app.use(prefix, authRoutes);
 app.use(prefix, rolesRoutes);
 app.use(prefix, floorRoutes)
 app.use(prefix, roomRoutes);

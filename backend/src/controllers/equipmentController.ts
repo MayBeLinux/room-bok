@@ -5,6 +5,7 @@
 import { AppDataSource } from '../db/data-source';
 import { Request , Response } from 'express';
 import { Equipment } from '../entity/Equipment';
+import { createEquipmentSchema, updateEquipmentSchema, equipmentIdParamSchema } from '../dto/EquipmentDto';
 
 const equipmentRepository = AppDataSource.getRepository(Equipment)
 
@@ -13,33 +14,59 @@ export const equipmentController = {
         const equipments = await equipmentRepository.find();
         res.json(equipments);
     },
-    createEquipments: async (req: Request, res: Response) => {
-        const {name} = req.body
-        const createEquipments = equipmentRepository.create({
-            name
-        })
-    await equipmentRepository.save(createEquipments)
-    res.status(201).json(createEquipments)
+    getEquipment: async (req: Request, res: Response) => {
+        const parsedParams = equipmentIdParamSchema.safeParse(req.params)
+        if (!parsedParams.success) {
+            return res.status(400).json({ errors: parsedParams.error.issues })
+        }
+        const { id } = parsedParams.data
+        const equipment = await equipmentRepository.findOneBy({ id })
+        if (!equipment) {
+            return res.status(404).json({ message: 'Equipment not found' })
+        }
+        res.json(equipment)
     },
-    deleteEquipments: async (req: Request, res: Response) => {
-        const id = req.params.id
-        const deletedEquipments = await equipmentRepository.delete(id)    
-        if (deletedEquipments.affected === 0) {
-            res.status(404).json(deletedEquipments)
+    createEquipment: async (req: Request, res: Response) => {
+        const parsed = createEquipmentSchema.safeParse(req.body)
+        if (!parsed.success) {
+            return res.status(400).json({ errors: parsed.error.issues })
         } else {
-            res.status(204).json(deletedEquipments)
+            const { name } = parsed.data
+            const createEquipment = equipmentRepository.create({ name })
+            await equipmentRepository.save(createEquipment)
+            res.status(201).json(createEquipment)
         }
     },
-    updateEquipments: async (req: Request, res: Response) => {
-        const id = req.params.id
-        const { name } = req.body
-        const updateEquipments = await equipmentRepository.update(id, {
-            name
-        })
-        if (updateEquipments.affected === 0) {
-            res.status(404).json(updateEquipments)
+    deleteEquipment: async (req: Request, res: Response) => {
+        const parsedParams = equipmentIdParamSchema.safeParse(req.params)
+        if (!parsedParams.success) {
+            return res.status(400).json({ errors: parsedParams.error.issues })
         } else {
-            res.status(200).json(updateEquipments)
+            const { id } = parsedParams.data
+            const deletedEquipment = await equipmentRepository.delete(id)
+            if (deletedEquipment.affected === 0) {
+                res.status(404).json(deletedEquipment)
+            } else {
+                res.status(204).json(deletedEquipment)
+            }
+        }
+    },
+    updateEquipment: async (req: Request, res: Response) => {
+        const parsedParams = equipmentIdParamSchema.safeParse(req.params)
+        if (!parsedParams.success) {
+            return res.status(400).json({ errors: parsedParams.error.issues })
+        }
+        const parsedBody = updateEquipmentSchema.safeParse(req.body)
+        if (!parsedBody.success) {
+            return res.status(400).json({ errors: parsedBody.error.issues })
+        }
+        const { id } = parsedParams.data
+        const { name } = parsedBody.data
+        const updateEquipment = await equipmentRepository.update(id, { name })
+        if (updateEquipment.affected === 0) {
+            res.status(404).json(updateEquipment)
+        } else {
+            res.status(200).json(updateEquipment)
         }
     }
 }

@@ -6,7 +6,9 @@ import { equipmentController } from '../controllers/equipmentController';
 const router = Router();
 
 router.get('/equipments', equipmentController.listEquipments);
-router.post('/equipment', equipmentController.createEquipments);
-router.delete('/equipment/:id', equipmentController.deleteEquipments);
-router.put('/equipment/:id', equipmentController.updateEquipments);
+router.get('/equipments/:id', equipmentController.getEquipment);
+router.post('/equipments', equipmentController.createEquipment);
+router.delete('/equipments/:id', equipmentController.deleteEquipment);
+router.put('/equipments/:id', equipmentController.updateEquipment);
+
 export default router;
