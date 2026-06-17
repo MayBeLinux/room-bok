@@ -31,7 +31,7 @@ export const floorController = {
         }
         res.json(floor)
     },
-    createFloors: async (req: Request, res: Response) => {
+    createFloor: async (req: Request, res: Response) => {
         const parsed = createFloorSchema.safeParse(req.body)
         if (!parsed.success) {
             return res.status(400).json({ errors: parsed.error.issues })
@@ -45,7 +45,7 @@ export const floorController = {
             res.status(201).json(createFloor)
         }
     },
-    deleteFloors: async (req: Request, res: Response) => {
+    deleteFloor: async (req: Request, res: Response) => {
         const parsedParams = floorIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })
@@ -60,7 +60,7 @@ export const floorController = {
             }
         }
     },
-    updateFloors: async (req: Request, res: Response) => {
+    updateFloor: async (req: Request, res: Response) => {
         const parsedParams = floorIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })

@@ -6,9 +6,8 @@ import { buildingController } from '../controllers/buildingController';
 const router = Router();
 
 router.get('/buildings', buildingController.listBuildings);
-router.get('/building/:id', buildingController.getBuilding);
-router.post('/building', buildingController.createBuildings);
-router.delete('/building/:id', buildingController.deleteBuildings)
-router.put('/building/:id', buildingController.updateBuildings)
+router.post('/building', buildingController.createBuilding);
+router.delete('/building/:id', buildingController.deleteBuilding)
+router.put('/building/:id', buildingController.updateBuilding)
 
 export default router;

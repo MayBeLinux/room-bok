@@ -28,7 +28,7 @@ export const roleController = {
         }
         res.json(role)
     },
-    createRoles: async (req: Request, res: Response) => {
+    createRole: async (req: Request, res: Response) => {
         const parsed = createRoleSchema.safeParse(req.body)   
         if (!parsed.success) {
             return res.status(400).json({ errors: parsed.error.issues })
@@ -41,7 +41,7 @@ export const roleController = {
             res.status(201).json(createRole)
         }
     },
-    deleteRoles: async (req: Request, res: Response) => {
+    deleteRole: async (req: Request, res: Response) => {
         const parsedParams = roleIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })
@@ -56,7 +56,7 @@ export const roleController = {
             }
         }
     },
-    updateRoles: async (req: Request, res: Response) => {
+    updateRole: async (req: Request, res: Response) => {
         const parsedParams = roleIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })

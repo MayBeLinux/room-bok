@@ -33,7 +33,7 @@ export const bookingController = {
         }
         res.json(booking)
     },
-    createBookings: async (req: Request, res: Response) => {
+    createBooking: async (req: Request, res: Response) => {
         const parsed = createBookingSchema.safeParse(req.body)
         if (!parsed.success) {
             return res.status(400).json({ errors: parsed.error.issues })
@@ -49,7 +49,7 @@ export const bookingController = {
             res.status(201).json(createBooking);
         }
     },
-    deleteBookings: async (req: Request, res: Response) => {
+    deleteBooking: async (req: Request, res: Response) => {
         const parsedParams = bookingIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })
@@ -64,7 +64,7 @@ export const bookingController = {
             }
         }
     },
-    updateBookings: async (req: Request, res: Response) => {
+    updateBooking: async (req: Request, res: Response) => {
         const parsedParams = bookingIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })

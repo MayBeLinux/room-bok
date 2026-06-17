@@ -40,7 +40,7 @@ export const userController = {
         }
         res.json(toUserResponse(user))
     },
-    createUsers: async (req: Request, res: Response) => {
+    createUser: async (req: Request, res: Response) => {
         const parsed = createUserSchema.safeParse(req.body)
         if (!parsed.success) {
             return res.status(400).json({ errors: parsed.error.issues })
@@ -57,7 +57,7 @@ export const userController = {
         const saved = await userRepository.save(createUser)
         res.status(201).json(toUserResponse(saved))
     },
-    deleteUsers: async (req: Request, res: Response) => {
+    deleteUser: async (req: Request, res: Response) => {
         const parsedParams = userIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })
@@ -71,7 +71,7 @@ export const userController = {
             res.status(204).json(deleted)
         }
     },
-    updateUsers: async (req: Request, res: Response) => {
+    updateUser: async (req: Request, res: Response) => {
         const parsedParams = userIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })

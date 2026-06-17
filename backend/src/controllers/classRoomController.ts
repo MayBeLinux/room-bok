@@ -31,7 +31,7 @@ export const roomController = {
         }
         res.json(room)
     },
-    createRooms: async (req: Request, res: Response) => {
+    createRoom: async (req: Request, res: Response) => {
         const parsed = createClassroomSchema.safeParse(req.body)
         if (!parsed.success) {
             return res.status(400).json({ errors: parsed.error.issues })
@@ -45,7 +45,7 @@ export const roomController = {
         await roomRepository.save(createRoom)
         res.status(201).json(createRoom)
     },
-    deleteRooms: async (req: Request, res: Response) => {
+    deleteRoom: async (req: Request, res: Response) => {
         const parsedParams = classroomIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })
@@ -59,7 +59,7 @@ export const roomController = {
             res.status(204).json(deleted)
         }
     },
-    updateRooms: async (req: Request, res: Response) => {
+    updateRoom: async (req: Request, res: Response) => {
         const parsedParams = classroomIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })

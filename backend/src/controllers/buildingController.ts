@@ -29,19 +29,19 @@ export const buildingController = {
         }
         res.json(building)
     },
-    createBuildings: async (req: Request, res: Response) => {
+    createBuilding: async (req: Request, res: Response) => {
         // The point of attention is when you create a building that is mandatory to define the number of floors exists inside.
         const parsed = createBuildingSchema.safeParse(req.body)
         if (!parsed.success) {
             return res.status(400).json({ errors: parsed.error.issues })
         } else {
             const { name } = parsed.data
-            const createBuildings = buildingRepository.create({ name })
-            await buildingRepository.save(createBuildings)
-            res.status(201).json(createBuildings)
+            const createBuilding = buildingRepository.create({ name })
+            await buildingRepository.save(createBuilding)
+            res.status(201).json(createBuilding)
         }
     },
-    deleteBuildings: async (req: Request, res: Response) => {
+    deleteBuilding: async (req: Request, res: Response) => {
         const parsedParams = buildingIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })
@@ -56,7 +56,7 @@ export const buildingController = {
             }
         }
     },
-    updateBuildings: async (req: Request, res: Response) => {
+    updateBuilding: async (req: Request, res: Response) => {
         const parsedParams = buildingIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })

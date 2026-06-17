@@ -31,6 +31,8 @@ REST uses HTTP verbs to express the **action** performed on a resource. Each ver
 | `PATCH`  | `/api/rooms/:id`   | Update some fields of the room       |
 | `DELETE` | `/api/rooms/:id`   | Delete the room                      |
 
+> **Plural convention** — collection URIs are always plural (`/api/users`, `/api/rooms`), even when the operation targets a single resource (`/api/users/:id`). The route never switches between `/api/user` and `/api/users` depending on the verb.
+
 ---
 
 ## HTTP Response Status Codes
@@ -65,76 +67,60 @@ The server **always** replies with a status code. It tells the client whether th
 
 ## Routes
 
-| Method | URI                                              | data send                                                                                   | data receive                                                                                            | status code | why ?                                              |
-| ------ | ------------------------------------------------ | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ----------- | -------------------------------------------------- |
-|        | **BUILDINGS**                                    | -----------                                                                                 | -----------                                                                                             | ----------- | -------------------------------------------        |
-| GET    | /api/buildings                                   | `none`                                                                                      | `[{ id: number, name: string, floors: Floor[] }]`                                                       | 200         | Receive the list of buildings                      |
-| GET    | /api/buildings/:id                               | `none`                                                                                      | `{ id: number, name: string, floors: Floor[] }`                                                         | 200 / 404   | Receive one building by id                         |
-| POST   | /api/buildings                                   | `{ name: string }`                                                                          | `{ id: number, name: string }`                                                                          | 201 / 400   | Create a new building                              |
-| PUT    | /api/buildings/:id                               | `{ name: string }`                                                                          | `{ id: number, name: string }`                                                                          | 200 / 404   | Replace a building                                 |
-| PATCH  | /api/buildings/:id                               | `{ name?: string }`                                                                         | `{ id: number, name: string }`                                                                          | 200 / 404   | Partially update a building                        |
-| DELETE | /api/buildings/:id                               | `none`                                                                                      | `none`                                                                                                  | 204 / 404   | Delete a building                                  |
-|        | **FLOORS**                                       | -----------                                                                                 | -----------                                                                                             | ----------- | -------------------------------------------        |
-| GET    | /api/floors                                      | `none`                                                                                      | `[{ id: number, level: number, building: Building }]`                                                   | 200         | Receive the list of floors                         |
-| GET    | /api/floors/:id                                  | `none`                                                                                      | `{ id: number, level: number, building: Building }`                                                     | 200 / 404   | Receive one floor by id                            |
-| POST   | /api/floors                                      | `{ level: number, idBuilding: number }`                                                     | `{ id: number, level: number, building: Building }`                                                     | 201 / 400   | Create a new floor                                 |
-| PUT    | /api/floors/:id                                  | `{ level: number, idBuilding: number }`                                                     | `{ id: number, level: number, building: Building }`                                                     | 200 / 404   | Replace a floor                                    |
-| PATCH  | /api/floors/:id                                  | `{ level?: number, idBuilding?: number }`                                                   | `{ id: number, level: number, building: Building }`                                                     | 200 / 404   | Partially update a floor                           |
-| DELETE | /api/floors/:id                                  | `none`                                                                                      | `none`                                                                                                  | 204 / 404   | Delete a floor                                     |
-|        | **ROOMS**                                        | -----------                                                                                 | -----------                                                                                             | ----------- | -------------------------------------------        |
-| GET    | /api/rooms                                       | `none`                                                                                      | `[{ id: number, nameRoom: string, maintenance: boolean, floor: Floor }]`                                | 200         | Receive the list of rooms                          |
-| GET    | /api/rooms/:id                                   | `none`                                                                                      | `{ id: number, nameRoom: string, maintenance: boolean, floor: Floor }`                                  | 200 / 404   | Receive one room by id                             |
-| POST   | /api/room                                        | `{ name_room: string, floor_id: number, maintenance?: boolean }`                            | `{ id: number, nameRoom: string, maintenance: boolean, floor: Floor }`                                  | 201 / 400   | Create a new room                                  |
-| PUT    | /api/room/:id                                    | `{ name_room?: string, floor_id?: number, maintenance?: boolean }`                          | `{ affected: number }`                                                                                  | 200 / 404   | Update a room                                      |
-| PATCH  | /api/rooms/:id                                   | `{ nameRoom?: string, idFloor?: number, maintenance?: boolean }`                            | `{ id: number, nameRoom: string, maintenance: boolean, floor: Floor }`                                  | 200 / 404   | (planned) Partially update a room                  |
-| DELETE | /api/room/:id                                    | `none`                                                                                      | `none`                                                                                                  | 204 / 404   | Delete a room                                      |
-|        | **EQUIPMENTS**                                   | -----------                                                                                 | -----------                                                                                             | ----------- | -------------------------------------------        |
-| GET    | /api/equipments                                  | `none`                                                                                      | `[{ id: number, name: string }]`                                                                        | 200         | Receive the list of equipments                     |
-| GET    | /api/equipments/:id                              | `none`                                                                                      | `{ id: number, name: string }`                                                                          | 200 / 404   | Receive one equipment by id                        |
-| POST   | /api/equipments                                  | `{ name: string }`                                                                          | `{ id: number, name: string }`                                                                          | 201 / 400   | Create a new equipment                             |
-| PUT    | /api/equipments/:id                              | `{ name: string }`                                                                          | `{ id: number, name: string }`                                                                          | 200 / 404   | Replace an equipment                               |
-| PATCH  | /api/equipments/:id                              | `{ name?: string }`                                                                         | `{ id: number, name: string }`                                                                          | 200 / 404   | Partially update an equipment                      |
-| DELETE | /api/equipments/:id                              | `none`                                                                                      | `none`                                                                                                  | 204 / 404   | Delete an equipment                                |
-|        | **CLASSROOM-EQUIPMENTS**                         | -----------                                                                                 | -----------                                                                                             | ----------- | -------------------------------------------        |
-| GET    | /api/classroom-equipments                        | `none`                                                                                      | `[{ idClassroom: number, idEquipment: number, quantity: number, startedAt: Date, endedAt: Date }]`      | 200         | Receive the list of equipments inside a classroom  |
-| GET    | /api/classroom-equipments/:idClassroom/:idEquip  | `none`                                                                                      | `{ idClassroom: number, idEquipment: number, quantity: number, startedAt: Date, endedAt: Date }`        | 200 / 404   | Receive one classroom-equipment link               |
-| POST   | /api/classroom-equipment                                 | `{ id_classroom: number, id_equipment: number, quantity: number, started_at: Date, ended_at: Date }` | `{ idClassroom: number, idEquipment: number, quantity: number, startedAt: Date, endedAt: Date }` | 201 / 400   | Link an equipment to a classroom                   |
-| PUT    | /api/classroom-equipment/:idClassroom/:idEquipment       | `{ quantity?: number, started_at?: Date, ended_at?: Date }`                                  | `{ affected: number }`                                                                                  | 200 / 404   | Update an equipment-classroom link                 |
-| PATCH  | /api/classroom-equipments/:idClassroom/:idEquip          | `{ quantity?: number, startedAt?: Date, endedAt?: Date }`                                    | `{ idClassroom: number, idEquipment: number, quantity: number, startedAt: Date, endedAt: Date }` | 200 / 404   | (planned) Partially update an equipment-classroom link |
-| DELETE | /api/classroom-equipment/:idClassroom/:idEquipment       | `none`                                                                                       | `none`                                                                                                  | 204 / 404   | Unlink an equipment from a classroom               |
-|        | **BOOKINGS**                                     | -----------                                                                                 | -----------                                                                                             | ----------- | -------------------------------------------        |
-| GET    | /api/bookings                                    | `none`                                                                                      | `[{ id: number, user: User, classroom: Classroom, startedAt: Date, endedAt: Date }]`                    | 200         | Receive the list of the reservations               |
-| GET    | /api/bookings/:id                                | `none`                                                                                      | `{ id: number, user: User, classroom: Classroom, startedAt: Date, endedAt: Date }`                      | 200 / 404   | Receive one booking by id                          |
-| POST   | /api/bookings                                    | `{ userId: number, classroomId: number, startedAt: Date, endedAt: Date }`                   | `{ id: number, user: User, classroom: Classroom, startedAt: Date, endedAt: Date }`                      | 201 / 400 / 409 | Create a new booking (409 if slot conflict)    |
-| PUT    | /api/bookings/:id                                | `{ userId: number, classroomId: number, startedAt: Date, endedAt: Date }`                   | `{ id: number, user: User, classroom: Classroom, startedAt: Date, endedAt: Date }`                      | 200 / 404   | Replace a booking                                  |
-| PATCH  | /api/bookings/:id                                | `{ classroomId?: number, startedAt?: Date, endedAt?: Date }`                                | `{ id: number, user: User, classroom: Classroom, startedAt: Date, endedAt: Date }`                      | 200 / 404   | Partially update a booking                         |
-| DELETE | /api/bookings/:id                                | `none`                                                                                      | `none`                                                                                                  | 204 / 404   | Cancel/delete a booking                            |
-|        | **USERS**                                        | -----------                                                                                 | --------------                                                                                          | ----------- | -------------------------------------------        |
-| GET    | /api/users                                       | `none`                                                                                      | `[{ id: number, firstName: string, lastName: string, email: string, role: Role }]`                      | 200         | Receive the list of users                          |
-| GET    | /api/users/:id                                   | `none`                                                                                      | `{ id: number, firstName: string, lastName: string, email: string, role: Role }`                        | 200 / 404   | Receive one user by id                             |
-| POST   | /api/user                                        | `{ first_name: string, last_name: string, email: string, password: string, role_id: number }` | `{ id: number, firstName: string, lastName: string, email: string, role: Role }`                      | 201 / 400 / 409 | Create a new user (409 if email already used)  |
-| PUT    | /api/user/:id                                    | `{ first_name?: string, last_name?: string, email?: string, password?: string, role_id?: number }` | `{ affected: number }`                                                                            | 200 / 404   | Update a user                                      |
-| PATCH  | /api/users/:id                                   | `{ firstName?: string, lastName?: string, email?: string, roleId?: number }`                | `{ id: number, firstName: string, lastName: string, email: string, role: Role }`                        | 200 / 404   | (planned) Partially update a user                  |
-| DELETE | /api/user/:id                                    | `none`                                                                                      | `none`                                                                                                  | 204 / 404   | Delete a user                                      |
-|        | **ROLES**                                        | -----------                                                                                 | --------------                                                                                          | ----------- | -------------------------------------------        |
-| GET    | /api/roles                                       | `none`                                                                                      | `[{ id: number, name: string }]`                                                                        | 200         | Return the list of available roles                 |
-| GET    | /api/roles/:id                                   | `none`                                                                                      | `{ id: number, name: string }`                                                                          | 200 / 404   | Receive one role by id                             |
-| POST   | /api/role                                        | `{ name: string }`                                                                          | `{ id: number, name: string }`                                                                          | 201 / 400   | Create a new role                                  |
-| PUT    | /api/role/:id                                    | `{ name?: string }`                                                                         | `{ affected: number }`                                                                                  | 200 / 404   | Update a role                                      |
-| PATCH  | /api/roles/:id                                   | `{ name?: string }`                                                                         | `{ id: number, name: string }`                                                                          | 200 / 404   | (planned) Partially update a role                  |
-| DELETE | /api/role/:id                                    | `none`                                                                                      | `none`                                                                                                  | 204 / 404   | Delete a role                                      |
+Only routes that are actually wired in `src/routes/` and exposed by `src/app.ts` are listed below. Bodies match the Zod DTOs in `src/dto/`.
 
-> The column `data send` describes the request **body** (or `none` for GET / DELETE). The column `data receive` describes the response **body** shape returned by the API.
+| Method | URI | data send | data receive | status code | why ? |
+| ------ | --- | --------- | ------------ | ----------- | ----- |
+| | **AUTH** | --- | --- | --- | --- |
+| POST | /api/auth/register | `{ first_name?: string, last_name?: string, email: string, password: string, role_id: number }` | `{ token: string, user: UserResponse }` | 201 / 400 / 409 | Register a new user and return a JWT |
+| POST | /api/auth/login | `{ email: string, password: string }` | `{ token: string, user: UserResponse }` | 200 / 400 / 401 | Authenticate and return a JWT |
+| | **BOOKINGS** | --- | --- | --- | --- |
+| GET | /api/bookings | `none` | `Booking[]` | 200 | List bookings |
+| GET | /api/bookings/:id | `none` | `Booking` | 200 / 400 / 404 | Get one booking by id |
+| POST | /api/bookings | `{ user_id: number, classroom_id: number, started_at: Date, ended_at: Date }` | `Booking` | 201 / 400 | Create a booking (ended_at must be after started_at) |
+| PUT | /api/bookings/:id | `{ user_id?: number, classroom_id?: number, started_at?: Date, ended_at?: Date }` | `{ affected: number }` | 200 / 400 / 404 | Update a booking |
+| DELETE | /api/bookings/:id | `none` | `none` | 204 / 400 / 404 | Delete a booking |
+| | **BUILDINGS** | --- | --- | --- | --- |
+| GET | /api/buildings | `none` | `Building[]` | 200 | List buildings |
+| GET | /api/buildings/:id | `none` | `Building` | 200 / 400 / 404 | Get one building by id |
+| POST | /api/buildings | `{ name: string }` | `Building` | 201 / 400 | Create a building |
+| PUT | /api/buildings/:id | `{ name?: string }` | `{ affected: number }` | 200 / 400 / 404 | Update a building |
+| DELETE | /api/buildings/:id | `none` | `none` | 204 / 400 / 404 | Delete a building |
+| | **EQUIPMENTS** | --- | --- | --- | --- |
+| GET | /api/equipments | `none` | `Equipment[]` | 200 | List equipments |
+| GET | /api/equipments/:id | `none` | `Equipment` | 200 / 400 / 404 | Get one equipment by id |
+| POST | /api/equipments | `{ name: string }` | `Equipment` | 201 / 400 | Create an equipment |
+| PUT | /api/equipments/:id | `{ name?: string }` | `{ affected: number }` | 200 / 400 / 404 | Update an equipment |
+| DELETE | /api/equipments/:id | `none` | `none` | 204 / 400 / 404 | Delete an equipment |
+| | **FLOORS** | --- | --- | --- | --- |
+| GET | /api/floors | `none` | `Floor[]` | 200 | List floors |
+| GET | /api/floors/:id | `none` | `Floor` | 200 / 400 / 404 | Get one floor by id |
+| POST | /api/floors | `{ level: number, building_id: number }` | `Floor` | 201 / 400 | Create a floor |
+| PUT | /api/floors/:id | `{ level?: number, building_id?: number }` | `{ affected: number }` | 200 / 400 / 404 | Update a floor |
+| DELETE | /api/floors/:id | `none` | `none` | 204 / 400 / 404 | Delete a floor |
+| | **ROLES** | --- | --- | --- | --- |
+| GET | /api/roles | `none` | `Role[]` | 200 | List roles |
+| GET | /api/roles/:id | `none` | `Role` | 200 / 400 / 404 | Get one role by id |
+| POST | /api/roles | `{ name: string }` | `Role` | 201 / 400 | Create a role |
+| PUT | /api/roles/:id | `{ name?: string }` | `{ affected: number }` | 200 / 400 / 404 | Update a role |
+| DELETE | /api/roles/:id | `none` | `none` | 204 / 400 / 404 | Delete a role |
+| | **ROOMS (Classroom)** | --- | --- | --- | --- |
+| GET | /api/rooms | `none` | `Classroom[]` | 200 | List rooms |
+| GET | /api/rooms/:id | `none` | `Classroom` | 200 / 400 / 404 | Get one room by id |
+| POST | /api/rooms | `{ name_room: string, floor_id: number, maintenance?: boolean }` | `Classroom` | 201 / 400 | Create a room |
+| PUT | /api/rooms/:id | `{ name_room?: string, floor_id?: number, maintenance?: boolean }` | `{ affected: number }` | 200 / 400 / 404 | Update a room |
+| DELETE | /api/rooms/:id | `none` | `none` | 204 / 400 / 404 | Delete a room |
+| | **CLASSROOM-EQUIPMENTS** | --- | --- | --- | --- |
+| GET | /api/classroom-equipments | `none` | `ClassroomEquipment[]` | 200 | List classroom-equipment links |
+| GET | /api/classroom-equipments/:idClassroom/:idEquipment | `none` | `ClassroomEquipment` | 200 / 400 / 404 | Get one classroom-equipment link |
+| POST | /api/classroom-equipments | `{ id_classroom: number, id_equipment: number, started_at?: Date, ended_at?: Date, quantity?: number }` | `ClassroomEquipment` | 201 / 400 | Link an equipment to a classroom |
+| PUT | /api/classroom-equipments/:idClassroom/:idEquipment | `{ started_at?: Date, ended_at?: Date, quantity?: number }` | `{ affected: number }` | 200 / 400 / 404 | Update a classroom-equipment link |
+| DELETE | /api/classroom-equipments/:idClassroom/:idEquipment | `none` | `none` | 204 / 400 / 404 | Unlink an equipment from a classroom |
+| | **USERS** | --- | --- | --- | --- |
+| GET | /api/users | `none` | `UserResponse[]` | 200 | List users (password stripped) |
+| GET | /api/users/:id | `none` | `UserResponse` | 200 / 400 / 404 | Get one user by id |
+| POST | /api/users | `{ first_name?: string, last_name?: string, email: string, password: string, role_id: number }` | `UserResponse` | 201 / 400 | Create a user (password hashed before save) |
+| PUT | /api/users/:id | `{ first_name?: string, last_name?: string, email?: string, password?: string, role_id?: number }` | `{ affected: number }` | 200 / 400 / 404 | Update a user |
+| DELETE | /api/users/:id | `none` | `none` | 204 / 400 / 404 | Delete a user |
 
-| Method | URI                       | data send ? | data receive ? | why ?                                             |
-| ------ | ------------------------- | ----------- | -------------- | ------------------------------------------------- |
-|        | **INFORMATIONS**          | ---         | ---            | ---                                               |
-| GET    | /api/buildings            | `nothing`   | `json file`    | Receive the list of buildings                     |
-| GET    | /api/rooms                | `nothing`   | `json file`    | Receive the list of rooms                         |
-| GET    | /api/equipments           | `nothing`   | `json file`    | Receive the list of equipments                    |
-| GET    | /api/floors               | `nothing`   | `json file`    | Receive the list of floors                        |
-| GET    | /api/bookings             | `nothing`   | `json file`    | Receive the list of the reservation               |
-| GET    | /api/users                | `nothing`   | `json file`    | Receive the list of User                          |
-| GET    | /api/classroom-equipments | `nothing`   | `json file`    | Receive the list of equipments inside a classroom |
-|        | **USERS**                 | ---         | ---            | ---                                               |
-| GET    | /api/roles                | `nothing`   | `json file`    | Return the list of the role possible              |
+> The `data send` column is the request **body** (or `none` for GET / DELETE). The `data receive` column is the response **body** shape. `400` is returned whenever Zod validation of the body or `:id` param fails.

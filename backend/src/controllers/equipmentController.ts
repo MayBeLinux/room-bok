@@ -26,32 +26,32 @@ export const equipmentController = {
         }
         res.json(equipment)
     },
-    createEquipments: async (req: Request, res: Response) => {
+    createEquipment: async (req: Request, res: Response) => {
         const parsed = createEquipmentSchema.safeParse(req.body)
         if (!parsed.success) {
             return res.status(400).json({ errors: parsed.error.issues })
         } else {
             const { name } = parsed.data
-            const createEquipments = equipmentRepository.create({ name })
-            await equipmentRepository.save(createEquipments)
-            res.status(201).json(createEquipments)
+            const createEquipment = equipmentRepository.create({ name })
+            await equipmentRepository.save(createEquipment)
+            res.status(201).json(createEquipment)
         }
     },
-    deleteEquipments: async (req: Request, res: Response) => {
+    deleteEquipment: async (req: Request, res: Response) => {
         const parsedParams = equipmentIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })
         } else {
             const { id } = parsedParams.data
-            const deletedEquipments = await equipmentRepository.delete(id)
-            if (deletedEquipments.affected === 0) {
-                res.status(404).json(deletedEquipments)
+            const deletedEquipment = await equipmentRepository.delete(id)
+            if (deletedEquipment.affected === 0) {
+                res.status(404).json(deletedEquipment)
             } else {
-                res.status(204).json(deletedEquipments)
+                res.status(204).json(deletedEquipment)
             }
         }
     },
-    updateEquipments: async (req: Request, res: Response) => {
+    updateEquipment: async (req: Request, res: Response) => {
         const parsedParams = equipmentIdParamSchema.safeParse(req.params)
         if (!parsedParams.success) {
             return res.status(400).json({ errors: parsedParams.error.issues })
@@ -62,11 +62,11 @@ export const equipmentController = {
         }
         const { id } = parsedParams.data
         const { name } = parsedBody.data
-        const updateEquipments = await equipmentRepository.update(id, { name })
-        if (updateEquipments.affected === 0) {
-            res.status(404).json(updateEquipments)
+        const updateEquipment = await equipmentRepository.update(id, { name })
+        if (updateEquipment.affected === 0) {
+            res.status(404).json(updateEquipment)
         } else {
-            res.status(200).json(updateEquipments)
+            res.status(200).json(updateEquipment)
         }
     }
 }
