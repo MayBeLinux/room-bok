@@ -7,7 +7,7 @@
 import { AppDataSource } from '../db/data-source';
 import { Request , Response } from 'express';
 import { Classroom } from '../entity/Classroom';
-import { createClassroomSchema, updateClassroomSchema, classroomIdParamSchema   } from '../dto/ClassroomDto'
+import { createClassroomSchema, updateClassroomSchema, classroomIdParamSchema } from '../dto/ClassroomDto'
 
 const roomRepository = AppDataSource.getRepository(Classroom)
 
@@ -16,8 +16,27 @@ export const roomController = {
         const rooms = await roomRepository.find();
         res.json(rooms);
     },
+    getRoom: async (req: Request, res: Response) => {
+        const parsedParams = classroomIdParamSchema.safeParse(req.params)
+        if (!parsedParams.success) {
+            return res.status(400).json({ errors: parsedParams.error.issues })
+        }
+        const { id } = parsedParams.data
+        const room = await roomRepository.findOne({
+            where: { id },
+            relations: { floor: true, equipments: true },
+        })
+        if (!room) {
+            return res.status(404).json({ message: 'Room not found' })
+        }
+        res.json(room)
+    },
     createRooms: async (req: Request, res: Response) => {
-        const { name_room, floor_id, maintenance } = req.body
+        const parsed = createClassroomSchema.safeParse(req.body)
+        if (!parsed.success) {
+            return res.status(400).json({ errors: parsed.error.issues })
+        }
+        const { name_room, floor_id, maintenance } = parsed.data
         const createRoom = roomRepository.create({
             nameRoom: name_room,
             floor: { id: floor_id },
@@ -26,20 +45,12 @@ export const roomController = {
         await roomRepository.save(createRoom)
         res.status(201).json(createRoom)
     },
-    getRoom: async (req: Request, res: Response) => {
-            const parsedParams = classroomIdParamSchema.safeParse(req.params)
-            if (!parsedParams.success) {
-                return res.status(400).json({ errors: parsedParams.error.issues })
-            }
-            const { id } = parsedParams.data
-            const role = await roomRepository.findOneBy({ id })
-            if (!role) {
-                return res.status(404).json({ message: 'Role not found' })
-            }
-            res.json(role)
-        },
     deleteRooms: async (req: Request, res: Response) => {
-        const id = req.params.id
+        const parsedParams = classroomIdParamSchema.safeParse(req.params)
+        if (!parsedParams.success) {
+            return res.status(400).json({ errors: parsedParams.error.issues })
+        }
+        const { id } = parsedParams.data
         const deleted = await roomRepository.delete(id)
 
         if (deleted.affected === 0) {
@@ -49,8 +60,16 @@ export const roomController = {
         }
     },
     updateRooms: async (req: Request, res: Response) => {
-        const id = req.params.id
-        const { name_room, floor_id, maintenance } = req.body
+        const parsedParams = classroomIdParamSchema.safeParse(req.params)
+        if (!parsedParams.success) {
+            return res.status(400).json({ errors: parsedParams.error.issues })
+        }
+        const parsedBody = updateClassroomSchema.safeParse(req.body)
+        if (!parsedBody.success) {
+            return res.status(400).json({ errors: parsedBody.error.issues })
+        }
+        const { id } = parsedParams.data
+        const { name_room, floor_id, maintenance } = parsedBody.data
         const update = await roomRepository.update(id, {
             nameRoom: name_room,
             floor: floor_id ? { id: floor_id } : undefined,
