@@ -33,7 +33,6 @@ app.use(
 app.use(express.json());
 
 // --------- ROUTES ----------
-const prefix = "/api"
 app.use(prefix, authRoutes);
 app.use(prefix, rolesRoutes);
 app.use(prefix, floorRoutes)
