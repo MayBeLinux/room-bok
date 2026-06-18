@@ -1,3 +1,52 @@
+@import "tailwindcss";
+
+/* Design tokens — registered with Tailwind so they generate utility classes
+   (bg-background, text-text-color, etc.) AND are exposed as CSS custom
+   properties at :root automatically. */
+@theme {
+  /* Backgrounds */
+  --color-background: #0B0B0F;
+  --color-background-zone: #22232B;
+
+  /* Foreground / text */
+  --color-text-color: #F3E6D2;
+
+  /* UI strokes */
+  --color-stroke-button: #32333A;
+
+  /* Accents */
+  --color-accent-green: #1A936F;
+
+  /* Room availability */
+  --color-avaible-rooms: #00FF80;
+  --color-unvaible-room: #FE6039;
+
+  /* Typography */
+  --font-space: 'Space Grotesk', system-ui, sans-serif;
+
+  /* Type scale — base and lg are fluid (laptop → big screen) */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: clamp(0.875rem, 0.85rem + 0.2vw, 1rem);
+  --text-lg: clamp(1rem, 0.95rem + 0.3vw, 1.25rem);
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+
+  /* Spacing scale (4px grid) */
+  --spacing: 0.25rem;
+}
+
+/* Aliases matching the design-spec variable names so `var(--background, ...)`
+   syntax keeps working without the `--color-` prefix. */
+:root {
+  --background: var(--color-background);
+  --background-zone: var(--color-background-zone);
+  --text-color: var(--color-text-color);
+  --stroke-button: var(--color-stroke-button);
+  --avaible-rooms: var(--color-avaible-rooms);
+  --unvaible-room: var(--color-unvaible-room);
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -52,6 +101,7 @@
 
 body {
   margin: 0;
+  background: var(--color-background);
 }
 
 h1,
@@ -157,11 +207,6 @@ code {
 }
 
 #app {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
