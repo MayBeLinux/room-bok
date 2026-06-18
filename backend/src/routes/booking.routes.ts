@@ -6,9 +6,8 @@ import { bookingController } from '../controllers/bookingController';
 const router = Router();
 
 router.get('/bookings', bookingController.listBookings);
-router.get('/bookings/:id', bookingController.getBooking);
-router.post('/bookings', bookingController.createBooking);
-router.delete('/bookings/:id', bookingController.deleteBooking);
-router.put('/bookings/:id', bookingController.updateBooking);
+router.post('/booking', bookingController.createBooking);
+router.delete('/booking/:id', bookingController.deleteBooking)
+router.put('/booking/:id', bookingController.updateBooking)
 
 export default router;
