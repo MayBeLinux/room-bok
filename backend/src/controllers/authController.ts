@@ -12,7 +12,7 @@ import { registerSchema, loginSchema } from '../dto/AuthDto';
 import { toUserResponse } from '../dto/UserDto';
 
 const userRepository = AppDataSource.getRepository(User)
-const BCRYPT_ROUNDS = 10
+const BCRYPT_ROUNDS = 10    
 
 const signToken = (payload: { userId: number; roleId: number }): string => {
     const secret = process.env.JWT_SECRET
