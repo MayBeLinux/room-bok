@@ -23,6 +23,17 @@
 
   /* Typography */
   --font-space: 'Space Grotesk', system-ui, sans-serif;
+
+  /* Type scale — base and lg are fluid (laptop → big screen) */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: clamp(0.875rem, 0.85rem + 0.2vw, 1rem);
+  --text-lg: clamp(1rem, 0.95rem + 0.3vw, 1.25rem);
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+
+  /* Spacing scale (4px grid) */
+  --spacing: 0.25rem;
 }
 
 /* Aliases matching the design-spec variable names so `var(--background, ...)`
@@ -90,6 +101,7 @@
 
 body {
   margin: 0;
+  background: var(--color-background);
 }
 
 h1,
@@ -195,11 +207,6 @@ code {
 }
 
 #app {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;

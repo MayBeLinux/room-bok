@@ -12,7 +12,7 @@ defineEmits<{
 <template>
   <button
     type="button"
-    class="inline-flex h-[80px] w-[200px] items-center justify-center overflow-clip border-b-[3px] border-solid px-[80px] py-[27px] font-space text-[25px] whitespace-nowrap text-text-color transition-colors"
+    class="inline-flex h-11 min-w-[140px] items-center justify-center overflow-clip border-b-2 border-solid px-6 font-space text-base whitespace-nowrap text-text-color transition-colors"
     :class="
       selected
         ? 'border-accent-green font-medium'

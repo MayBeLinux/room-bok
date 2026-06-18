@@ -5,6 +5,7 @@ import MenuButton from '../components/MenuButton.vue'
 import DropdownList, { type DropdownItem } from '../components/DropdownList.vue'
 import TextField from '../components/TextField.vue'
 import NavbarButton from '../components/NavbarButton.vue'
+import ParametersZone from '../components/ParametersZone.vue'
 
 const selectedBuilding = ref<string | null>(null)
 
@@ -47,6 +48,15 @@ const activeTab = ref<string>('Button 1')
         :selected="activeTab === tab"
         @click="activeTab = tab"
       />
+    </div>
+
+    <div class="mt-8 h-[300px] w-[400px]">
+      <ParametersZone>
+        <div class="flex flex-col gap-4 p-6">
+          <TextField v-model="roomNumber" placeholder="Champ A..." />
+          <TextField v-model="roomNumber" placeholder="Champ B..." />
+        </div>
+      </ParametersZone>
     </div>
   </div>
 </template>

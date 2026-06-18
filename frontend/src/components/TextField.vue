@@ -9,13 +9,13 @@ const model = defineModel<string>({ default: '' })
 
 <template>
   <div
-    class="inline-flex h-[50px] w-[273px] items-center rounded-[10px] border-[3px] border-solid border-stroke-button bg-background-zone p-[10px] shadow-[9px_8px_1.5px_-5px_rgba(0,0,0,0.25)]"
+    class="inline-flex h-10 w-full max-w-xs items-center rounded-lg border-[1.5px] border-solid border-stroke-button bg-background-zone p-2 shadow-[6px_5px_1px_-3px_rgba(0,0,0,0.25)]"
   >
     <input
       v-model="model"
       :type="type ?? 'text'"
       :placeholder="placeholder"
-      class="h-full w-full rounded-[5px] bg-stroke-button px-[7px] font-space text-[15px] font-medium whitespace-nowrap text-text-color outline-none placeholder:text-text-color/80"
+      class="h-full w-full rounded-md bg-stroke-button px-2 font-space text-sm font-medium whitespace-nowrap text-text-color outline-none placeholder:text-text-color/70"
     />
   </div>
 </template>
