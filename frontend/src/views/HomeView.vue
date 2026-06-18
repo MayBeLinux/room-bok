@@ -4,6 +4,7 @@ import SelectField from '../components/SelectField.vue'
 import MenuButton from '../components/MenuButton.vue'
 import DropdownList, { type DropdownItem } from '../components/DropdownList.vue'
 import TextField from '../components/TextField.vue'
+import NavbarButton from '../components/NavbarButton.vue'
 
 const selectedBuilding = ref<string | null>(null)
 
@@ -18,6 +19,9 @@ const roomNumber = ref<string>('')
 const onSelect = (item: DropdownItem) => {
   selectedBuilding.value = item.label
 }
+
+const tabs = ['Button 1', 'Button 2', 'Button 3']
+const activeTab = ref<string>('Button 1')
 </script>
 
 <template>
@@ -33,7 +37,16 @@ const onSelect = (item: DropdownItem) => {
 
     <div class="mt-6">
       <TextField v-model="roomNumber" placeholder="Room number............" />
-      <p class="mt-2 text-text-color">Valeur saisie : {{ roomNumber }}</p>
+    </div>
+
+    <div class="mt-8 flex">
+      <NavbarButton
+        v-for="tab in tabs"
+        :key="tab"
+        :label="tab"
+        :selected="activeTab === tab"
+        @click="activeTab = tab"
+      />
     </div>
   </div>
 </template>
