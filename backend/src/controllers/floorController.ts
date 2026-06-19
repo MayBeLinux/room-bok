@@ -24,7 +24,7 @@ export const floorController = {
         const { id } = parsedParams.data
         const floor = await floorRepository.findOne({
             where: { id },
-            relations: { building: true },
+            relations: { building: true, classrooms: true },
         })
         if (!floor) {
             return res.status(404).json({ message: 'Floor not found' })
