@@ -154,6 +154,10 @@ The Vite dev server listens on `http://localhost:5173` and is allowed by the bac
 - API routes: [`doc/backend_doc/route-api.md`](doc/backend_doc/route-api.md)
 - Backend roadmap: [`doc/backend_doc/ROADMAP.md`](doc/backend_doc/ROADMAP.md)
 
+## Figma Design and Mockup
+
+[Figma Design](https://www.figma.com/design/YJWSOORW6WwZXj6gXhZbui/room-bok?node-id=19-339&p=f&t=VOUlV989igtfezy6-0)
+
 ## RoadMAP
 
 - [ ] Conception (MCD / UML)
