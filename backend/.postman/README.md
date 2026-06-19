@@ -3,15 +3,18 @@
 Tests for all backend routes.
 
 ## Files
+
 - `rooms-management.postman_collection.json` — the collection (all routes grouped by resource)
 - `rooms-management.postman_environment.json` — the local environment (`baseUrl`, `token`, ids…)
 
 ## Import into Postman
+
 1. Open Postman → **Import** → drop the 2 files.
 2. In the top-right, select the **Rooms Management - Local** environment.
 3. Start the backend: `npm run dev` (port `3000` by default, prefix `/api`).
 
 ## Suggested workflow
+
 The `Create *` requests store the returned `id` into a collection variable (`roleId`, `buildingId`, etc.), so run them in this order so everything chains correctly:
 
 1. **Roles → Create role** (fills `roleId`)
@@ -27,6 +30,7 @@ The `Create *` requests store the returned `id` into a collection variable (`rol
 After that, the `Get / Update / Delete` requests reuse the ids already stored.
 
 ## Variables
+
 | Variable      | Default                    | Notes                                       |
 |---------------|----------------------------|---------------------------------------------|
 | `baseUrl`     | `http://localhost:3000/api`| Update if you change `PORT` / `API_PREFIX`  |
