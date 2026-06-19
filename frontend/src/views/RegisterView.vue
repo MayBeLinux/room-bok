@@ -7,6 +7,7 @@ import TextField from '../components/TextField.vue'
 
 const email = ref('')
 const password = ref('')
+const passwordConfirm = ref('')
 </script>
 
 <template>
@@ -34,7 +35,7 @@ const password = ref('')
         <p
           class="font-space text-text-color text-[15px] font-medium whitespace-nowrap"
         >
-          Room Bok magic behing technic
+          Room Book magic behind technic
         </p>
         <div class="bg-text-color h-px w-[235px]"></div>
       </div>
@@ -88,7 +89,7 @@ const password = ref('')
                   Re-insert your password
                 </span>
                 <TextField
-                  v-model="password"
+                  v-model="passwordConfirm"
                   type="password"
                   placeholder="password"
                 />

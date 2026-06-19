@@ -49,9 +49,8 @@ const menuItems: DropdownItem[] = [
   { value: 'logout', label: 'Logout' },
 ]
 
-function onMenuAction(item: DropdownItem) {
+function onMenuAction(_item: DropdownItem) {
   // câblage réel plus tard (router push, store auth, etc.)
-  console.log('Menu action:', item.value)
 }
 
 type Tab = 'booking' | 'floor' | 'building'

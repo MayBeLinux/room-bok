@@ -34,7 +34,7 @@ const password = ref('')
         <p
           class="font-space text-text-color text-[15px] font-medium whitespace-nowrap"
         >
-          Room Bok magic behing technic
+          Room Book magic behind technic
         </p>
         <div class="bg-text-color h-px w-[235px]"></div>
       </div>
