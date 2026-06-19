@@ -156,7 +156,7 @@ The Vite dev server listens on `http://localhost:5173` and is allowed by the bac
 
 ## Figma Design and Mockup
 
-https://www.figma.com/design/YJWSOORW6WwZXj6gXhZbui/room-bok?node-id=19-339&p=f&t=VOUlV989igtfezy6-0
+[Figma Design](https://www.figma.com/design/YJWSOORW6WwZXj6gXhZbui/room-bok?node-id=19-339&p=f&t=VOUlV989igtfezy6-0)
 
 ## RoadMAP
 
