@@ -4,32 +4,6 @@ import { darkTheme, NCalendar, NConfigProvider, NPopover } from 'naive-ui'
 import type { GlobalThemeOverrides } from 'naive-ui'
 import { computed, ref, watch } from 'vue'
 
-type Range = [number, number]
-
-const props = defineProps<{
-  value?: Range | null
-}>()
-
-const emit = defineEmits<{
-  'update:value': [Range]
-}>()
-
-const rangeStart = ref<number | null>(props.value?.[0] ?? null)
-const rangeEnd = ref<number | null>(props.value?.[1] ?? null)
-const hoveredDay = ref<number | null>(null)
-
-watch(
-  () => props.value,
-  (v) => {
-    rangeStart.value = v?.[0] ?? null
-    rangeEnd.value = v?.[1] ?? null
-  },
-)
-
-const focusedDay = computed(
-  () => rangeEnd.value ?? rangeStart.value ?? addDays(Date.now(), 1).valueOf(),
-)
-
 const themeOverrides: GlobalThemeOverrides = {
   common: {
     primaryColor: '#1A936F',
@@ -69,6 +43,32 @@ const themeOverrides: GlobalThemeOverrides = {
     borderHover: '1px solid #1A936F',
   },
 }
+
+type Range = [number, number]
+
+const props = defineProps<{
+  value?: Range | null
+}>()
+
+const emit = defineEmits<{
+  'update:value': [Range]
+}>()
+
+const rangeStart = ref<number | null>(props.value?.[0] ?? null)
+const rangeEnd = ref<number | null>(props.value?.[1] ?? null)
+const hoveredDay = ref<number | null>(null)
+
+watch(
+  () => props.value,
+  (v) => {
+    rangeStart.value = v?.[0] ?? null
+    rangeEnd.value = v?.[1] ?? null
+  },
+)
+
+const focusedDay = computed(
+  () => rangeEnd.value ?? rangeStart.value ?? addDays(Date.now(), 1).valueOf(),
+)
 
 function startOfDay(ts: number) {
   const d = new Date(ts)
