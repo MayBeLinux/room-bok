@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import Calendar from '../components/Calendar.vue'
 import Logo from '../components/Logo.vue'
 import MenuButton from '../components/MenuButton.vue'
 import ParametersZone from '../components/ParametersZone.vue'
@@ -13,7 +14,18 @@ const selectedBuilding = ref<string | number | null>(null)
 const selectedFloor = ref<string | number | null>(null)
 const selectedRooms = ref<string | number | null>(null)
 const selectedEquipment = ref<string | null>(null)
-const selectedDate = ref<string | null>(null)
+const selectedDateValue = ref<[number, number] | null>(null)
+const selectedDate = computed(() => {
+  if (selectedDateValue.value == null) return null
+  const fmt = (ts: number) => {
+    const d = new Date(ts)
+    const dd = String(d.getDate()).padStart(2, '0')
+    const mm = String(d.getMonth() + 1).padStart(2, '0')
+    return `${dd}/${mm}/${d.getFullYear()}`
+  }
+  const [start, end] = selectedDateValue.value
+  return `${fmt(start)} → ${fmt(end)}`
+})
 
 // Mocks — à remplacer par la vraie source de données plus tard
 const buildings: DropdownItem[] = [
@@ -97,7 +109,14 @@ const activeTab = ref<Tab>('booking')
           </div>
 
           <div class="mt-5">
-            <SelectField :label="selectedDate ?? 'Select Date'" size="sm" block />
+            <Calendar
+              :value="selectedDateValue"
+              @update:value="(v: [number, number]) => (selectedDateValue = v)"
+            >
+              <template #trigger>
+                <SelectField :label="selectedDate ?? 'Select Date'" size="sm" block />
+              </template>
+            </Calendar>
           </div>
 
           <!-- Divider entre les deux sections -->
