@@ -9,6 +9,8 @@ import SelectMenu from '../components/SelectMenu.vue'
 import FloorView from '../components/FloorView.vue'
 import NavbarButton from '../components/NavbarButton.vue'
 import type { DropdownItem } from '../components/DropdownList.vue'
+import floor1Url from '../assets/svg/floors/floor1.svg'
+import floor2Url from '../assets/svg/floors/floor2.svg'
 
 const selectedBuilding = ref<string | number | null>(null)
 const selectedFloor = ref<string | number | null>(null)
@@ -52,6 +54,18 @@ const menuItems: DropdownItem[] = [
 function onMenuAction(_item: DropdownItem) {
   // câblage réel plus tard (router push, store auth, etc.)
 }
+
+const floorPlanUrl = computed<string | undefined>(() => {
+  if (selectedBuilding.value == null) return undefined
+  switch (selectedFloor.value) {
+    case '1':
+      return floor1Url
+    case '2':
+      return floor2Url
+    default:
+      return undefined
+  }
+})
 
 type Tab = 'booking' | 'floor' | 'building'
 const activeTab = ref<Tab>('booking')
@@ -129,7 +143,7 @@ const activeTab = ref<Tab>('booking')
       </ParametersZone>
 
       <!-- Zone droite : plan du floor -->
-      <FloorView />
+      <FloorView :floor-image-url="floorPlanUrl" />
     </main>
 
     <!-- Footer : navbar tabs -->
