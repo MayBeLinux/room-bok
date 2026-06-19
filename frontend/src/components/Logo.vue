@@ -2,12 +2,12 @@
 
 <template>
   <div
-    class="flex size-10 items-start rounded bg-[#5865F2] p-1.5"
+    class="flex size-10 items-center justify-center rounded bg-[#5865F2]"
     aria-label="room-bok"
   >
     <!-- Placeholder géométrie — remplacer plus tard par le vrai logo SVG -->
     <svg
-      class="size-7"
+      class="size-full"
       viewBox="0 0 72 72"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

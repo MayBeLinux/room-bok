@@ -1,17 +1,71 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import Calendar from '../components/Calendar.vue'
 import Logo from '../components/Logo.vue'
 import MenuButton from '../components/MenuButton.vue'
 import ParametersZone from '../components/ParametersZone.vue'
 import SelectField from '../components/SelectField.vue'
+import SelectMenu from '../components/SelectMenu.vue'
 import FloorView from '../components/FloorView.vue'
 import NavbarButton from '../components/NavbarButton.vue'
+import type { DropdownItem } from '../components/DropdownList.vue'
+import floor1Url from '../assets/svg/floors/floor1.svg'
+import floor2Url from '../assets/svg/floors/floor2.svg'
 
-const selectedBuilding = ref<string | null>(null)
-const selectedFloor = ref<string | null>(null)
-const selectedRooms = ref<string | null>(null)
+const selectedBuilding = ref<string | number | null>(null)
+const selectedFloor = ref<string | number | null>(null)
+const selectedRooms = ref<string | number | null>(null)
 const selectedEquipment = ref<string | null>(null)
-const selectedDate = ref<string | null>(null)
+const selectedDateValue = ref<[number, number] | null>(null)
+const selectedDate = computed(() => {
+  if (selectedDateValue.value == null) return null
+  const fmt = (ts: number) => {
+    const d = new Date(ts)
+    const dd = String(d.getDate()).padStart(2, '0')
+    const mm = String(d.getMonth() + 1).padStart(2, '0')
+    return `${dd}/${mm}/${d.getFullYear()}`
+  }
+  const [start, end] = selectedDateValue.value
+  return `${fmt(start)} → ${fmt(end)}`
+})
+
+// Mocks — à remplacer par la vraie source de données plus tard
+const buildings: DropdownItem[] = [
+  { value: 'a', label: 'Bâtiment A' },
+  { value: 'b', label: 'Bâtiment B' },
+  { value: 'c', label: 'Bâtiment C' },
+]
+const floors: DropdownItem[] = [
+  { value: '0', label: 'RDC' },
+  { value: '1', label: '1er étage' },
+  { value: '2', label: '2e étage' },
+]
+const rooms: DropdownItem[] = [
+  { value: 'r1', label: 'Salle 101' },
+  { value: 'r2', label: 'Salle 102' },
+  { value: 'r3', label: 'Salle 103' },
+]
+const menuItems: DropdownItem[] = [
+  { value: 'login', label: 'Login' },
+  { value: 'register', label: 'Register' },
+  { value: 'logout', label: 'Logout' },
+]
+
+function onMenuAction(_item: DropdownItem) {
+  // câblage réel plus tard (router push, store auth, etc.)
+}
+
+const floorPlanUrl = computed<string | undefined>(() => {
+  if (selectedBuilding.value == null) return undefined
+  switch (selectedFloor.value) {
+    case '1':
+      return floor1Url
+    case '2':
+      return floor2Url
+    default:
+      return undefined
+  }
+})
 
 type Tab = 'booking' | 'floor' | 'building'
 const activeTab = ref<Tab>('booking')
@@ -22,7 +76,17 @@ const activeTab = ref<Tab>('booking')
     <!-- Header : Logo gauche + MenuButton droite -->
     <header class="flex items-start justify-between">
       <Logo />
-      <MenuButton aria-label="Open menu" />
+      <SelectMenu
+        label="Menu"
+        :items="menuItems"
+        placement="bottom-end"
+        :match-trigger-width="false"
+        @change="onMenuAction"
+      >
+        <template #trigger="{ toggle }">
+          <MenuButton aria-label="Open menu" @click="toggle" />
+        </template>
+      </SelectMenu>
     </header>
 
     <!-- Main : ParametersZone gauche + FloorView droite -->
@@ -31,33 +95,59 @@ const activeTab = ref<Tab>('booking')
     >
       <!-- Zone gauche : paramètres -->
       <ParametersZone>
-        <div class="flex h-full flex-col items-center gap-10 py-8">
-          <!-- 3 selects principaux -->
-          <div class="flex flex-col items-center gap-4">
-            <SelectField :label="selectedBuilding ?? 'Select Building'" />
-            <SelectField :label="selectedFloor ?? 'Select Floor'" />
-            <SelectField :label="selectedRooms ?? 'Select Rooms'" />
+        <div class="mx-auto flex h-full max-w-[260px] flex-col px-6 py-10">
+          <!-- Section 1 : filtres de recherche (lieu + date) -->
+          <div class="flex flex-col gap-2">
+            <SelectMenu
+              v-model="selectedBuilding"
+              label="Select Building"
+              :items="buildings"
+              size="sm"
+              block
+            />
+            <SelectMenu
+              v-model="selectedFloor"
+              label="Select Floor"
+              :items="floors"
+              size="sm"
+              block
+            />
+            <SelectMenu
+              v-model="selectedRooms"
+              label="Select Rooms"
+              :items="rooms"
+              size="sm"
+              block
+            />
           </div>
 
-          <!-- Select Equipment -->
-          <SelectField :label="selectedEquipment ?? 'Select Equipment'" />
+          <div class="mt-5">
+            <Calendar
+              :value="selectedDateValue"
+              @update:value="(v: [number, number]) => (selectedDateValue = v)"
+            >
+              <template #trigger>
+                <SelectField :label="selectedDate ?? 'Select Date'" size="sm" block />
+              </template>
+            </Calendar>
+          </div>
 
-          <!-- Select Date -->
-          <div class="w-full max-w-xs">
-            <SelectField
-              :label="selectedDate ?? 'Select Date'"
-              class="!w-full"
-            />
+          <!-- Divider entre les deux sections -->
+          <hr class="my-10 border-1 border-t border-stroke-button/40" />
+
+          <!-- Section 2 : équipement -->
+          <div>
+            <SelectField :label="selectedEquipment ?? 'Select Equipment'" size="sm" block />
           </div>
         </div>
       </ParametersZone>
 
       <!-- Zone droite : plan du floor -->
-      <FloorView />
+      <FloorView :floor-image-url="floorPlanUrl" />
     </main>
 
     <!-- Footer : navbar tabs -->
-    <nav class="mt-8 flex">
+    <nav class="mt-1 flex">
       <NavbarButton
         label="Booking Room"
         :selected="activeTab === 'booking'"
@@ -69,9 +159,9 @@ const activeTab = ref<Tab>('booking')
         @click="activeTab = 'floor'"
       />
       <NavbarButton
-        label="Add building"
-        :selected="activeTab === 'building'"
-        @click="activeTab = 'building'"
+      label="Add Building"
+      :selected="activeTab === 'building'"
+      @click="activeTab = 'building'"
       />
     </nav>
   </div>

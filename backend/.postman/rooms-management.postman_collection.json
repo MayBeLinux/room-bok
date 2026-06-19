@@ -1,0 +1,757 @@
+{
+	"info": {
+		"_postman_id": "b1a4a3a0-0001-4000-8000-000000000001",
+		"name": "Rooms Management API",
+		"description": "Collection de test pour toutes les routes du backend rooms-management.\n\nVariables utilisées :\n- `baseUrl` : URL de base de l'API (ex: http://localhost:3000/api)\n- `token` : JWT renvoyé par /auth/login (auto-stocké si tu utilises la requête Login)\n- `roleId`, `userId`, `buildingId`, `floorId`, `roomId`, `bookingId`, `equipmentId` : ids réutilisables entre requêtes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"Josh\",\n  \"last_name\": \"Test\",\n  \"email\": \"josh+{{$timestamp}}@example.com\",\n  \"password\": \"password123\",\n  \"role_id\": {{roleId}}\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const res = pm.response.json();",
+									"if (res && res.token) {",
+									"  pm.collectionVariables.set('token', res.token);",
+									"  console.log('Token sauvegardé dans la collection.');",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"josh@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "login"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "List roles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/roles",
+							"host": ["{{baseUrl}}"],
+							"path": ["roles"]
+						}
+					}
+				},
+				{
+					"name": "Get role",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/roles/{{roleId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["roles", "{{roleId}}"]
+						}
+					}
+				},
+				{
+					"name": "Create role",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const res = pm.response.json();",
+									"if (res && res.id) pm.collectionVariables.set('roleId', res.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"student\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/roles",
+							"host": ["{{baseUrl}}"],
+							"path": ["roles"]
+						}
+					}
+				},
+				{
+					"name": "Update role",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"teacher\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/roles/{{roleId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["roles", "{{roleId}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete role",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/roles/{{roleId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["roles", "{{roleId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Buildings",
+			"item": [
+				{
+					"name": "List buildings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/buildings",
+							"host": ["{{baseUrl}}"],
+							"path": ["buildings"]
+						}
+					}
+				},
+				{
+					"name": "Create building",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const res = pm.response.json();",
+									"if (res && res.id) pm.collectionVariables.set('buildingId', res.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Building A\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/building",
+							"host": ["{{baseUrl}}"],
+							"path": ["building"]
+						}
+					}
+				},
+				{
+					"name": "Update building",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Building A - renamed\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/building/{{buildingId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["building", "{{buildingId}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete building",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/building/{{buildingId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["building", "{{buildingId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Floors",
+			"item": [
+				{
+					"name": "List floors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/floors",
+							"host": ["{{baseUrl}}"],
+							"path": ["floors"]
+						}
+					}
+				},
+				{
+					"name": "Create floor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const res = pm.response.json();",
+									"if (res && res.id) pm.collectionVariables.set('floorId', res.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"level\": 1,\n  \"building_id\": {{buildingId}}\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/floor",
+							"host": ["{{baseUrl}}"],
+							"path": ["floor"]
+						}
+					}
+				},
+				{
+					"name": "Update floor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"level\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/floor/{{floorId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["floor", "{{floorId}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete floor",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/floor/{{floorId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["floor", "{{floorId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Rooms",
+			"item": [
+				{
+					"name": "List rooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/rooms",
+							"host": ["{{baseUrl}}"],
+							"path": ["rooms"]
+						}
+					}
+				},
+				{
+					"name": "Get room",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/rooms/{{roomId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["rooms", "{{roomId}}"]
+						}
+					}
+				},
+				{
+					"name": "Create room",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const res = pm.response.json();",
+									"if (res && res.id) pm.collectionVariables.set('roomId', res.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name_room\": \"Room 101\",\n  \"floor_id\": {{floorId}},\n  \"maintenance\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/rooms",
+							"host": ["{{baseUrl}}"],
+							"path": ["rooms"]
+						}
+					}
+				},
+				{
+					"name": "Update room",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name_room\": \"Room 101 - updated\",\n  \"maintenance\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/rooms/{{roomId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["rooms", "{{roomId}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete room",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/rooms/{{roomId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["rooms", "{{roomId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "List bookings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/bookings",
+							"host": ["{{baseUrl}}"],
+							"path": ["bookings"]
+						}
+					}
+				},
+				{
+					"name": "Get booking",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/bookings/{{bookingId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["bookings", "{{bookingId}}"]
+						}
+					}
+				},
+				{
+					"name": "Create booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const res = pm.response.json();",
+									"if (res && res.id) pm.collectionVariables.set('bookingId', res.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_id\": {{userId}},\n  \"classroom_id\": {{roomId}},\n  \"started_at\": \"2026-06-20T09:00:00.000Z\",\n  \"ended_at\": \"2026-06-20T11:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bookings",
+							"host": ["{{baseUrl}}"],
+							"path": ["bookings"]
+						}
+					}
+				},
+				{
+					"name": "Update booking",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ended_at\": \"2026-06-20T12:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bookings/{{bookingId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["bookings", "{{bookingId}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete booking",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/bookings/{{bookingId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["bookings", "{{bookingId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Equipments",
+			"item": [
+				{
+					"name": "List equipments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/equipments",
+							"host": ["{{baseUrl}}"],
+							"path": ["equipments"]
+						}
+					}
+				},
+				{
+					"name": "Get equipment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/equipments/{{equipmentId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["equipments", "{{equipmentId}}"]
+						}
+					}
+				},
+				{
+					"name": "Create equipment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const res = pm.response.json();",
+									"if (res && res.id) pm.collectionVariables.set('equipmentId', res.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Projector\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/equipments",
+							"host": ["{{baseUrl}}"],
+							"path": ["equipments"]
+						}
+					}
+				},
+				{
+					"name": "Update equipment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"HD Projector\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/equipments/{{equipmentId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["equipments", "{{equipmentId}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete equipment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/equipments/{{equipmentId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["equipments", "{{equipmentId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Classroom Equipments",
+			"item": [
+				{
+					"name": "List classroom-equipments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/classroom-equipments",
+							"host": ["{{baseUrl}}"],
+							"path": ["classroom-equipments"]
+						}
+					}
+				},
+				{
+					"name": "Get classroom-equipment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/classroom-equipments/{{roomId}}/{{equipmentId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["classroom-equipments", "{{roomId}}", "{{equipmentId}}"]
+						}
+					}
+				},
+				{
+					"name": "Create classroom-equipment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_classroom\": {{roomId}},\n  \"id_equipment\": {{equipmentId}},\n  \"quantity\": 2,\n  \"started_at\": \"2026-06-20T08:00:00.000Z\",\n  \"ended_at\": \"2026-06-20T18:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/classroom-equipments",
+							"host": ["{{baseUrl}}"],
+							"path": ["classroom-equipments"]
+						}
+					}
+				},
+				{
+					"name": "Update classroom-equipment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantity\": 5\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/classroom-equipments/{{roomId}}/{{equipmentId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["classroom-equipments", "{{roomId}}", "{{equipmentId}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete classroom-equipment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/classroom-equipments/{{roomId}}/{{equipmentId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["classroom-equipments", "{{roomId}}", "{{equipmentId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "List users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["users"]
+						}
+					}
+				},
+				{
+					"name": "Create user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const res = pm.response.json();",
+									"if (res && res.id) pm.collectionVariables.set('userId', res.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"Alice\",\n  \"last_name\": \"Doe\",\n  \"email\": \"alice+{{$timestamp}}@example.com\",\n  \"password\": \"password123\",\n  \"role_id\": {{roleId}}\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user",
+							"host": ["{{baseUrl}}"],
+							"path": ["user"]
+						}
+					}
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"Alice updated\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["user", "{{userId}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["user", "{{userId}}"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{ "key": "token", "value": "{{token}}", "type": "string" }
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": { "type": "text/javascript", "exec": [""] }
+		},
+		{
+			"listen": "test",
+			"script": { "type": "text/javascript", "exec": [""] }
+		}
+	],
+	"variable": [
+		{ "key": "baseUrl", "value": "http://localhost:3000/api" },
+		{ "key": "token", "value": "" },
+		{ "key": "roleId", "value": "1" },
+		{ "key": "userId", "value": "1" },
+		{ "key": "buildingId", "value": "1" },
+		{ "key": "floorId", "value": "1" },
+		{ "key": "roomId", "value": "1" },
+		{ "key": "bookingId", "value": "1" },
+		{ "key": "equipmentId", "value": "1" }
+	]
+}
