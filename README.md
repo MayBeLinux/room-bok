@@ -154,6 +154,12 @@ The backend connects to Supabase through the standard `pg` driver via TypeORM. C
 
 ![Backend structure](assets/backend-structure.svg)
 
+## Database Schema (UML)
+
+UML diagram of the PostgreSQL schema — entities, relationships and cardinalities behind the API.
+
+![Database UML diagram](assets/diagram-uml.png)
+
 ## Log Format
 
 The expected log format is **CLF (Common Log Format)**.
