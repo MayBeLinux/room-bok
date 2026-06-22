@@ -10,5 +10,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
-	}
+	},
+	"include": ["src/**/*"],
+	"exclude": ["dist", "node_modules", "tests", "jest.config.ts"]
 }

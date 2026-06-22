@@ -11,7 +11,7 @@ const config: Config = {
 			"ts-jest",
 			{
 				isolatedModules: false,
-				tsconfig: "<rootDir>/tsconfig.json",
+				tsconfig: "<rootDir>/tsconfig.test.json",
 			},
 		],
 	},
