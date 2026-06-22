@@ -69,8 +69,6 @@ The server **always** replies with a status code. It tells the client whether th
 
 Only routes that are actually wired in `src/routes/` and exposed by `src/app.ts` are listed below. Bodies match the Zod DTOs in `src/dto/`. All routes are mounted under the `API_PREFIX` env variable (default: `/api`).
 
-> ⚠️ **Plural / singular inconsistency** — the convention says collection URIs should always be plural. A few routes still use a singular path (`/api/building`, `/api/floor`, `/api/user`) for `POST`, `PUT` and `DELETE`. They are documented as-is so the table matches what the server actually exposes; aligning them to plural is tracked in the backend roadmap.
-
 | Method | URI | data send | data receive | status code | why ? |
 | ------ | --- | --------- | ------------ | ----------- | ----- |
 | | **AUTH** | --- | --- | --- | --- |
@@ -85,9 +83,9 @@ Only routes that are actually wired in `src/routes/` and exposed by `src/app.ts`
 | | **BUILDINGS** | --- | --- | --- | --- |
 | GET | /api/buildings | `none` | `Building[]` | 200 | List buildings |
 | GET | /api/buildings/:id | `none` | `Building` | 200 / 400 / 404 | Get one building by id |
-| POST | /api/building | `{ name: string }` | `Building` | 201 / 400 | Create a building (singular path, see note above) |
-| PUT | /api/building/:id | `{ name?: string }` | `{ affected: number }` | 200 / 400 / 404 | Update a building (singular path) |
-| DELETE | /api/building/:id | `none` | `none` | 204 / 400 / 404 | Delete a building (singular path) |
+| POST | /api/buildings | `{ name: string }` | `Building` | 201 / 400 | Create a building |
+| PUT | /api/buildings/:id | `{ name?: string }` | `{ affected: number }` | 200 / 400 / 404 | Update a building |
+| DELETE | /api/buildings/:id | `none` | `none` | 204 / 400 / 404 | Delete a building |
 | | **EQUIPMENTS** | --- | --- | --- | --- |
 | GET | /api/equipments | `none` | `Equipment[]` | 200 | List equipments |
 | GET | /api/equipments/:id | `none` | `Equipment` | 200 / 400 / 404 | Get one equipment by id |
@@ -97,9 +95,9 @@ Only routes that are actually wired in `src/routes/` and exposed by `src/app.ts`
 | | **FLOORS** | --- | --- | --- | --- |
 | GET | /api/floors | `none` | `Floor[]` | 200 | List floors |
 | GET | /api/floors/:id | `none` | `Floor` | 200 / 400 / 404 | Get one floor by id |
-| POST | /api/floor | `{ level: number, building_id: number }` | `Floor` | 201 / 400 | Create a floor (singular path, see note above) |
-| PUT | /api/floor/:id | `{ level?: number, building_id?: number }` | `{ affected: number }` | 200 / 400 / 404 | Update a floor (singular path) |
-| DELETE | /api/floor/:id | `none` | `none` | 204 / 400 / 404 | Delete a floor (singular path) |
+| POST | /api/floors | `{ level: number, building_id: number }` | `Floor` | 201 / 400 | Create a floor |
+| PUT | /api/floors/:id | `{ level?: number, building_id?: number }` | `{ affected: number }` | 200 / 400 / 404 | Update a floor |
+| DELETE | /api/floors/:id | `none` | `none` | 204 / 400 / 404 | Delete a floor |
 | | **ROLES** | --- | --- | --- | --- |
 | GET | /api/roles | `none` | `Role[]` | 200 | List roles |
 | GET | /api/roles/:id | `none` | `Role` | 200 / 400 / 404 | Get one role by id |
@@ -120,9 +118,10 @@ Only routes that are actually wired in `src/routes/` and exposed by `src/app.ts`
 | DELETE | /api/classroom-equipments/:idClassroom/:idEquipment | `none` | `none` | 204 / 400 / 404 | Unlink an equipment from a classroom |
 | | **USERS** | --- | --- | --- | --- |
 | GET | /api/users | `none` | `UserResponse[]` | 200 | List users (password stripped from the response) |
-| POST | /api/user | `{ first_name?: string, last_name?: string, email: string, password: string, role_id: number }` | `UserResponse` | 201 / 400 | Create a user (password hashed before save, singular path) |
-| PUT | /api/user/:id | `{ first_name?: string, last_name?: string, email?: string, password?: string, role_id?: number }` | `{ affected: number }` | 200 / 400 / 404 | Update a user (singular path) |
-| DELETE | /api/user/:id | `none` | `none` | 204 / 400 / 404 | Delete a user (singular path) |
+| GET | /api/users/:id | `none` | `UserResponse` | 200 / 400 / 404 | Get one user by id |
+| POST | /api/users | `{ first_name?: string, last_name?: string, email: string, password: string, role_id: number }` | `UserResponse` | 201 / 400 | Create a user (password hashed before save) |
+| PUT | /api/users/:id | `{ first_name?: string, last_name?: string, email?: string, password?: string, role_id?: number }` | `{ affected: number }` | 200 / 400 / 404 | Update a user |
+| DELETE | /api/users/:id | `none` | `none` | 204 / 400 / 404 | Delete a user |
 
 > The `data send` column is the request **body** (or `none` for `GET` / `DELETE`). The `data receive` column is the response **body** shape. `400` is returned whenever Zod validation of the body or `:id` URL param fails.
 

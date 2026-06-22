@@ -253,6 +253,34 @@ The API is exposed under the `/api` prefix (e.g. `http://localhost:3000/api/room
 | `npm run migration:revert`    | Revert the last applied migration                                  |
 | `npm run migration:show`      | List migrations and their status                                   |
 | `npm run seed`                | Populate the database with the seed data in `src/seeders/`         |
+| `npm test`                    | Run the Jest test suite (DTO units + supertest integration)        |
+| `npm run test:watch`          | Run Jest in watch mode                                             |
+| `npm run test:coverage`       | Run Jest and emit a coverage report under `coverage/`              |
+
+#### Testing
+
+The backend ships with a Jest test suite combining:
+
+- **Unit tests** for every Zod DTO in `src/dto/` — happy path + validation failures.
+- **Supertest integration tests** that boot the Express app against an **in-memory SQLite** database (`better-sqlite3`) — no Postgres / Supabase connection required to run the tests.
+
+Tests live in `backend/tests/`:
+
+```text
+backend/tests/
+├── dto/                # DTO unit tests
+├── helpers/db.ts       # init / reset / close helpers for the test DataSource
+├── integration/        # supertest tests (auth, buildings, rooms, bookings, roles)
+└── setup-env.ts        # forces NODE_ENV=test and sets JWT defaults
+```
+
+`src/db/data-source.ts` is environment-aware: when `NODE_ENV=test` it switches to an in-memory SQLite DataSource with `synchronize: true`, so each test run starts from a clean schema.
+
+Run them with:
+
+```bash
+npm test
+```
 
 ### 3. Frontend setup
 
