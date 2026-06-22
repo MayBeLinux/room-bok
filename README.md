@@ -257,31 +257,6 @@ The API is exposed under the `/api` prefix (e.g. `http://localhost:3000/api/room
 | `npm run test:watch`          | Run Jest in watch mode                                             |
 | `npm run test:coverage`       | Run Jest and emit a coverage report under `coverage/`              |
 
-#### Testing
-
-The backend ships with a Jest test suite combining:
-
-- **Unit tests** for every Zod DTO in `src/dto/` — happy path + validation failures.
-- **Supertest integration tests** that boot the Express app against an **in-memory SQLite** database (`better-sqlite3`) — no Postgres / Supabase connection required to run the tests.
-
-Tests live in `backend/tests/`:
-
-```text
-backend/tests/
-├── dto/                # DTO unit tests
-├── helpers/db.ts       # init / reset / close helpers for the test DataSource
-├── integration/        # supertest tests (auth, buildings, rooms, bookings, roles)
-└── setup-env.ts        # forces NODE_ENV=test and sets JWT defaults
-```
-
-`src/db/data-source.ts` is environment-aware: when `NODE_ENV=test` it switches to an in-memory SQLite DataSource with `synchronize: true`, so each test run starts from a clean schema.
-
-Run them with:
-
-```bash
-npm test
-```
-
 ### 3. Frontend setup
 
 In a **second terminal**, from the repository root:
@@ -324,6 +299,63 @@ Once both servers are running:
 - Open `http://localhost:5173` to access the app
 - Hit `http://localhost:3000/` — you should see the API healthcheck string
 - Hit `http://localhost:3000/api/rooms` (or any other endpoint listed in [`doc/backend_doc/route-api.md`](doc/backend_doc/route-api.md)) to confirm the API is reachable
+
+## How to Test
+
+The backend ships with a **Jest** test suite. No Postgres or Supabase connection is required — tests use an **in-memory SQLite** database (`better-sqlite3`) so they can run anywhere (locally, in CI, in containers).
+
+### Test stack
+
+| Tool             | Why ?                                                       |
+| ---------------- | ----------------------------------------------------------- |
+| Jest             | Test runner + assertions                                    |
+| ts-jest          | Compile TypeScript on the fly                               |
+| Supertest        | Fire HTTP requests at the Express app without a live port   |
+| better-sqlite3   | In-memory SQL engine used by TypeORM during tests           |
+
+### What is covered
+
+- **DTO unit tests** — every Zod schema in `src/dto/` (auth, booking, building, classroom, classroom-equipment, equipment, floor, role, user): happy paths + validation failures (bad email, short password, out-of-order dates, etc.).
+- **Integration tests** — Express endpoints for `auth`, `buildings`, `rooms`, `bookings`, `roles`. Each test boots the app via the `createApp()` factory, hits real routes with Supertest, and asserts the response status + body shape.
+
+### File layout
+
+```text
+backend/tests/
+├── dto/                # DTO unit tests (one file per Zod schema)
+├── helpers/db.ts       # initTestDb / resetTestDb / closeTestDb
+├── integration/        # Supertest tests (auth, buildings, rooms, bookings, roles)
+└── setup-env.ts        # forces NODE_ENV=test, sets JWT defaults
+```
+
+### How the test database works
+
+`src/db/data-source.ts` is **environment-aware**:
+
+- `NODE_ENV=test` → `better-sqlite3` in-memory DataSource with `synchronize: true`
+- Anything else → the regular PostgreSQL / Supabase connection
+
+`tests/setup-env.ts` forces `NODE_ENV=test` before any code is loaded, so importing `AppDataSource` inside a test always returns the in-memory variant. Each test calls `resetTestDb()` in `beforeEach`, which drops and recreates the schema — every test starts from an empty database.
+
+### Running the tests
+
+From the `backend/` folder:
+
+```bash
+# one-shot run
+npm test
+
+# re-run on file change
+npm run test:watch
+
+# generate coverage under backend/coverage/
+npm run test:coverage
+```
+
+### Adding a new test
+
+- **DTO** — drop a `<Name>Dto.test.ts` next to its siblings in `backend/tests/dto/`. Import the schema, call `safeParse(...)`, assert `.success`.
+- **Integration** — create `<resource>.integration.test.ts` in `backend/tests/integration/`. Import `createApp` and the `resetTestDb` / `closeTestDb` helpers, wire them in `beforeEach` / `afterAll`, then drive routes with `request(app).post(...)`.
 
 ## Documentation
 
