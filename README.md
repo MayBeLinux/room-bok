@@ -158,7 +158,7 @@ The backend connects to Supabase through the standard `pg` driver via TypeORM. C
 
 UML diagram of the PostgreSQL schema — entities, relationships and cardinalities behind the API.
 
-![Database UML diagram](assets/diagram-uml.png)
+![Database UML diagram](doc/assets/diagram-uml.png)
 
 ## Log Format
 
