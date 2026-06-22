@@ -4,11 +4,6 @@ import { useAuthStore } from '../stores/auth'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'home',
-    component: () => import('../views/HomeView.vue'),
-  },
-  {
-    path: '/booking',
     name: 'booking',
     component: () => import('../views/BookingView.vue'),
   },
