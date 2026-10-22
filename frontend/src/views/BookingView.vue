@@ -31,6 +31,13 @@ interface EquipmentRecord {
   id: number
   name: string | null
 }
+interface CafeteriaRecord {
+  id: number
+  capacity: number | null
+  openingTime: string | null
+  closingTime: string | null
+  classroom: { id: number }
+}
 
 const selectedBuilding = ref<number | null>(null)
 const selectedFloor = ref<number | null>(null)
@@ -54,6 +61,17 @@ const buildingRecords = ref<BuildingRecord[]>([])
 const floorRecords = ref<FloorRecord[]>([])
 const roomRecords = ref<RoomRecord[]>([])
 const equipmentRecords = ref<EquipmentRecord[]>([])
+const cafeteriaRecords = ref<CafeteriaRecord[]>([])
+
+// A cafeteria is a classroom with extra details, so match it by classroom id.
+const selectedCafeteria = computed<CafeteriaRecord | null>(
+  () => cafeteriaRecords.value.find((c) => c.classroom.id === selectedRoom.value) ?? null,
+)
+
+// The DB stores times as "HH:MM:SS"; only "HH:MM" is useful to display.
+function formatTime(time: string | null): string {
+  return time ? time.slice(0, 5) : '—'
+}
 
 function formatFloorLevel(level: number | null): string {
   if (level == null) return '—'
@@ -93,6 +111,11 @@ async function fetchBuildings(): Promise<BuildingRecord[]> {
 
 async function fetchEquipments(): Promise<EquipmentRecord[]> {
   const { data } = await api.get<EquipmentRecord[]>('/equipments')
+  return data
+}
+
+async function fetchCafeterias(): Promise<CafeteriaRecord[]> {
+  const { data } = await api.get<CafeteriaRecord[]>('/cafeterias')
   return data
 }
 
@@ -136,12 +159,14 @@ watch(selectedFloor, async (id) => {
 })
 
 onMounted(async () => {
-  const [buildingsList, equipmentsList] = await Promise.all([
+  const [buildingsList, equipmentsList, cafeteriasList] = await Promise.all([
     fetchBuildings(),
     fetchEquipments(),
+    fetchCafeterias(),
   ])
   buildingRecords.value = buildingsList
   equipmentRecords.value = equipmentsList
+  cafeteriaRecords.value = cafeteriasList
 })
 
 const floorPlanUrl = computed<string | undefined>(() => {
@@ -218,12 +243,26 @@ const activeTab = ref<Tab>('booking')
             />
             <SelectMenu
               v-model="selectedRoom"
-              label="Select Room"
+              label="Select Space"
               :items="rooms"
               size="sm"
               block
             />
           </div>
+
+          <dl
+            v-if="selectedCafeteria"
+            class="mt-3 flex flex-col gap-1 font-space text-sm text-text-color"
+          >
+            <div class="flex justify-between">
+              <dt>Opening</dt>
+              <dd class="font-medium">{{ formatTime(selectedCafeteria.openingTime) }}</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt>Closing</dt>
+              <dd class="font-medium">{{ formatTime(selectedCafeteria.closingTime) }}</dd>
+            </div>
+          </dl>
 
           <div class="mt-5">
             <Calendar v-model:value="selectedDateValue">
