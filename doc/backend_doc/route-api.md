@@ -86,6 +86,9 @@ Only routes that are actually wired in `src/routes/` and exposed by `src/app.ts`
 | POST | /api/buildings | `{ name: string }` | `Building` | 201 / 400 | Create a building |
 | PUT | /api/buildings/:id | `{ name?: string }` | `{ affected: number }` | 200 / 400 / 404 | Update a building |
 | DELETE | /api/buildings/:id | `none` | `none` | 204 / 400 / 404 | Delete a building |
+| | **CAFETERIAS** | --- | --- | --- | --- |
+| GET | /api/cafeterias | `none` | `Cafeteria[]` | 200 | List cafeterias with their room, floor and building (read-only: cafeterias are created by the seeder) |
+| GET | /api/cafeterias/:id | `none` | `Cafeteria` | 200 / 400 / 404 | Get one cafeteria by id, with its room, floor and building |
 | | **EQUIPMENTS** | --- | --- | --- | --- |
 | GET | /api/equipments | `none` | `Equipment[]` | 200 | List equipments |
 | GET | /api/equipments/:id | `none` | `Equipment` | 200 / 400 / 404 | Get one equipment by id |
