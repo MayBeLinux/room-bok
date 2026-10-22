@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 import Calendar from '../components/Calendar.vue'
 import Logo from '../components/Logo.vue'
 import MenuButton from '../components/MenuButton.vue'
@@ -155,11 +157,23 @@ const floorPlanUrl = computed<string | undefined>(() => {
   }
 })
 
+const router = useRouter()
+const auth = useAuthStore()
+
 const menuItems: DropdownItem[] = [
   { value: 'login', label: 'Login' },
   { value: 'register', label: 'Register' },
   { value: 'logout', label: 'Logout' },
 ]
+
+function onMenuSelect(item: DropdownItem) {
+  if (item.value === 'logout') {
+    auth.clearSession()
+    router.push({ name: 'login' })
+    return
+  }
+  router.push({ name: item.value as string })
+}
 
 type Tab = 'booking' | 'floor' | 'building'
 const activeTab = ref<Tab>('booking')
@@ -174,6 +188,7 @@ const activeTab = ref<Tab>('booking')
         :items="menuItems"
         placement="bottom-end"
         :match-trigger-width="false"
+        @change="onMenuSelect"
       >
         <template #trigger="{ toggle }">
           <MenuButton aria-label="Open menu" @click="toggle" />
