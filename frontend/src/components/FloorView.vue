@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import panzoom, { type PanZoom } from 'panzoom'
 import {
   PhArrowsCounterClockwise,
@@ -7,9 +7,30 @@ import {
   PhPlus,
 } from '@phosphor-icons/vue'
 
+export interface FloorPlan {
+  url: string
+  width: number
+  height: number
+}
+
+// A zone drawn on top of the plan, in the plan's own pixel coordinates.
+export interface FloorHighlight {
+  points: string
+  center: { x: number; y: number }
+  label: string
+}
+
 const props = defineProps<{
-  floorImageUrl?: string
+  floorPlan?: FloorPlan
+  highlight?: FloorHighlight | null
 }>()
+
+// SVG text has no auto width, so size the pill from the label length.
+const PILL_FONT_SIZE = 56
+const pillWidth = computed(() =>
+  props.highlight ? props.highlight.label.length * PILL_FONT_SIZE * 0.6 + PILL_FONT_SIZE * 1.5 : 0,
+)
+const pillHeight = PILL_FONT_SIZE * 2
 
 const viewportEl = ref<HTMLDivElement | null>(null)
 const stageEl = ref<HTMLDivElement | null>(null)
@@ -32,7 +53,7 @@ function attach() {
   })
 }
 
-watch(() => props.floorImageUrl, attach, { flush: 'post', immediate: true })
+watch(() => props.floorPlan?.url, attach, { flush: 'post', immediate: true })
 
 onBeforeUnmount(detach)
 
@@ -67,16 +88,45 @@ function reset() {
     class="relative size-full overflow-hidden rounded-[20px] border-[3px] border-solid border-stroke-button bg-background-zone"
   >
     <div
-      v-if="floorImageUrl"
+      v-if="floorPlan"
       ref="stageEl"
       class="absolute inset-0 cursor-grab active:cursor-grabbing"
     >
-      <img
-        :src="floorImageUrl"
-        alt="Floor plan"
-        draggable="false"
-        class="size-full select-none object-contain"
-      />
+      <svg
+        :viewBox="`0 0 ${floorPlan.width} ${floorPlan.height}`"
+        preserveAspectRatio="xMidYMid meet"
+        role="img"
+        aria-label="Floor plan"
+        class="size-full select-none"
+      >
+        <image :href="floorPlan.url" :width="floorPlan.width" :height="floorPlan.height" />
+        <g v-if="highlight">
+          <polygon
+            :points="highlight.points"
+            class="fill-accent-green/40 stroke-accent-green"
+            stroke-width="8"
+            stroke-linejoin="round"
+          />
+          <rect
+            :x="highlight.center.x - pillWidth / 2"
+            :y="highlight.center.y - pillHeight / 2"
+            :width="pillWidth"
+            :height="pillHeight"
+            :rx="pillHeight / 2"
+            class="fill-accent-green"
+          />
+          <text
+            :x="highlight.center.x"
+            :y="highlight.center.y"
+            text-anchor="middle"
+            dominant-baseline="central"
+            :font-size="PILL_FONT_SIZE"
+            class="fill-text-color font-space font-medium"
+          >
+            {{ highlight.label }}
+          </text>
+        </g>
+      </svg>
     </div>
     <div v-else class="relative size-full">
       <model-viewer
@@ -99,7 +149,7 @@ function reset() {
     </div>
 
     <div
-      v-if="floorImageUrl"
+      v-if="floorPlan"
       class="pointer-events-none absolute right-4 bottom-4 flex flex-col gap-1"
     >
       <button

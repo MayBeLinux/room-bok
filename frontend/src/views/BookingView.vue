@@ -11,9 +11,11 @@ import SelectMenu from '../components/SelectMenu.vue'
 import FloorView from '../components/FloorView.vue'
 import NavbarButton from '../components/NavbarButton.vue'
 import type { DropdownItem } from '../components/DropdownList.vue'
+import type { FloorHighlight, FloorPlan } from '../components/FloorView.vue'
 import { api } from '../api/client'
 import floor1Url from '../assets/svg/floors/floor1.svg'
 import floor2Url from '../assets/svg/floors/floor2.svg'
+import cafeteriaPlanUrl from '../assets/svg/cafeteria/cafeteria.svg'
 
 interface BuildingRecord {
   id: number
@@ -36,7 +38,7 @@ interface CafeteriaRecord {
   capacity: number | null
   openingTime: string | null
   closingTime: string | null
-  classroom: { id: number }
+  classroom: { id: number; nameRoom: string | null }
 }
 
 const selectedBuilding = ref<number | null>(null)
@@ -169,16 +171,36 @@ onMounted(async () => {
   cafeteriaRecords.value = cafeteriasList
 })
 
-const floorPlanUrl = computed<string | undefined>(() => {
+const floor1Plan: FloorPlan = { url: floor1Url, width: 1899, height: 1282 }
+const floor2Plan: FloorPlan = { url: floor2Url, width: 3416, height: 1282 }
+const cafeteriaPlan: FloorPlan = { url: cafeteriaPlanUrl, width: 1899, height: 1282 }
+
+// Inside of the cafeteria walls on cafeteriaPlan, in the plan's pixel coordinates.
+const CAFETERIA_ZONE = {
+  points: '68,68 1831,68 1831,1214 68,1214',
+  center: { x: 950, y: 641 },
+}
+
+const floorPlan = computed<FloorPlan | undefined>(() => {
+  // A selected cafeteria shows its own layout instead of the whole floor.
+  if (selectedCafeteria.value) return cafeteriaPlan
   if (selectedBuilding.value == null || selectedFloor.value == null) return undefined
   const floor = floorRecords.value.find((f) => f.id === selectedFloor.value)
   switch (floor?.level) {
     case 1:
-      return floor1Url
+      return floor1Plan
     case 2:
-      return floor2Url
+      return floor2Plan
     default:
       return undefined
+  }
+})
+
+const floorHighlight = computed<FloorHighlight | null>(() => {
+  if (!selectedCafeteria.value) return null
+  return {
+    ...CAFETERIA_ZONE,
+    label: selectedCafeteria.value.classroom.nameRoom ?? 'Cafétéria',
   }
 })
 
@@ -284,7 +306,7 @@ const activeTab = ref<Tab>('booking')
         </div>
       </ParametersZone>
 
-      <FloorView :floor-image-url="floorPlanUrl" />
+      <FloorView :floor-plan="floorPlan" :highlight="floorHighlight" />
     </main>
 
     <nav class="mt-1 flex">
