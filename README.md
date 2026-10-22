@@ -156,9 +156,78 @@ The backend connects to Supabase through the standard `pg` driver via TypeORM. C
 
 ## Database Schema (UML)
 
-UML diagram of the PostgreSQL schema — entities, relationships and cardinalities behind the API.
+UML diagram of the PostgreSQL schema — entities, relationships and cardinalities behind the API. It mirrors the TypeORM entities in `backend/src/entity/`; foreign keys are nullable, hence the zero-or-one (`|o`) side on most relations.
 
-![Database UML diagram](doc/assets/diagram-uml.png)
+```mermaid
+erDiagram
+  building {
+    int id PK
+    varchar name
+  }
+  floor {
+    int id PK
+    int level
+    int id_building FK
+  }
+  room_type {
+    int id PK
+    varchar name UK
+  }
+  classroom {
+    int id PK
+    varchar name_room
+    boolean maintenance
+    int id_floor FK
+    int id_room_type FK
+  }
+  cafeteria {
+    int id PK
+    int id_classroom FK, UK
+    int capacity
+    time opening_time
+    time closing_time
+  }
+  equipment {
+    int id PK
+    text name
+  }
+  classroom_equipment {
+    int id_classroom PK, FK
+    int id_equipment PK, FK
+    timestamp started_at
+    timestamp ended_at
+    int quantity
+  }
+  role {
+    int id PK
+    varchar name UK
+  }
+  user {
+    int id PK
+    varchar first_name
+    varchar last_name
+    varchar email UK
+    varchar password
+    int role_id FK
+  }
+  booking {
+    int id PK
+    int user_id FK
+    int classroom_id FK
+    timestamp started_at
+    timestamp ended_at
+  }
+
+  building |o--o{ floor : "has"
+  floor |o--o{ classroom : "contains"
+  room_type |o--o{ classroom : "categorizes"
+  classroom |o--o| cafeteria : "details"
+  classroom ||--o{ classroom_equipment : "is equipped with"
+  equipment ||--o{ classroom_equipment : "is installed in"
+  role |o--o{ user : "is assigned to"
+  user |o--o{ booking : "makes"
+  classroom |o--o{ booking : "is booked in"
+```
 
 ## Log Format
 
