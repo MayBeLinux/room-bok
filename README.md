@@ -232,6 +232,14 @@ npm run migration:run
 npm run seed
 ```
 
+The seed creates one account per role to test the login (for local development only):
+
+| Role          | Email                   | Password       |
+| ------------- | ----------------------- | -------------- |
+| Administrator | `admin@roombook.test`   | `Admin1234!`   |
+| Teacher       | `teacher@roombook.test` | `Teacher1234!` |
+| Student       | `student@roombook.test` | `Student1234!` |
+
 Start the development server (auto-reloads on file change, listens on `http://localhost:3000`):
 
 ```bash
@@ -296,7 +304,7 @@ npm run dev
 
 Once both servers are running:
 
-- Open `http://localhost:5173` to access the app
+- Open `http://localhost:5173` — you are redirected to `/login`; sign in with one of the test accounts above
 - Hit `http://localhost:3000/` — you should see the API healthcheck string
 - Hit `http://localhost:3000/api/rooms` (or any other endpoint listed in [`doc/backend_doc/route-api.md`](doc/backend_doc/route-api.md)) to confirm the API is reachable
 
