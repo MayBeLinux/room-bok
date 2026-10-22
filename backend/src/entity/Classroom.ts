@@ -5,10 +5,13 @@ import {
 	ManyToOne,
 	JoinColumn,
 	OneToMany,
+	OneToOne,
 } from "typeorm";
 import { Floor } from "./Floor";
 import { ClassroomEquipment } from "./ClassroomEquipment";
 import { Booking } from "./Booking";
+import { RoomType } from "./RoomType";
+import { Cafeteria } from "./Cafeteria";
 
 @Entity({ name: "classroom" })
 export class Classroom {
@@ -22,6 +25,10 @@ export class Classroom {
 	@JoinColumn({ name: "id_floor" })
 	floor!: Floor;
 
+	@ManyToOne(() => RoomType, (roomType) => roomType.classrooms)
+	@JoinColumn({ name: "id_room_type" })
+	roomType!: RoomType;
+
 	@Column({ type: "boolean", nullable: true })
 	maintenance!: boolean | null;
 
@@ -30,4 +37,7 @@ export class Classroom {
 
 	@OneToMany(() => Booking, (booking) => booking.classroom)
 	bookings!: Booking[];
+
+	@OneToOne(() => Cafeteria, (cafeteria) => cafeteria.classroom)
+	cafeteria!: Cafeteria | null;
 }

@@ -18,6 +18,22 @@ CREATE TABLE "public"."classroom" (
     "name_room" varchar(100),
     "id_floor" int,
     "maintenance" boolean,
+    "id_room_type" int,
+    PRIMARY KEY ("id")
+);
+
+CREATE TABLE "public"."room_type" (
+    "id" serial NOT NULL,
+    "name" varchar(50) UNIQUE,
+    PRIMARY KEY ("id")
+);
+
+CREATE TABLE "public"."cafeteria" (
+    "id" serial NOT NULL,
+    "id_classroom" int UNIQUE,
+    "capacity" int,
+    "opening_time" time,
+    "closing_time" time,
     PRIMARY KEY ("id")
 );
 
@@ -66,6 +82,12 @@ ALTER TABLE "public"."floor"
 
 ALTER TABLE "public"."classroom"
     ADD CONSTRAINT "fk_classroom_floor" FOREIGN KEY ("id_floor") REFERENCES "public"."floor"("id");
+
+ALTER TABLE "public"."classroom"
+    ADD CONSTRAINT "fk_classroom_room_type" FOREIGN KEY ("id_room_type") REFERENCES "public"."room_type"("id");
+
+ALTER TABLE "public"."cafeteria"
+    ADD CONSTRAINT "fk_cafeteria_classroom" FOREIGN KEY ("id_classroom") REFERENCES "public"."classroom"("id");
 
 ALTER TABLE "public"."classroom_equipment"
     ADD CONSTRAINT "fk_classroom_equipment_classroom" FOREIGN KEY ("id_classroom") REFERENCES "public"."classroom"("id");
