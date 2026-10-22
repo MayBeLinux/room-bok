@@ -26,7 +26,7 @@ const props = defineProps<{
 }>()
 
 // SVG text has no auto width, so size the pill from the label length.
-const PILL_FONT_SIZE = 56
+const PILL_FONT_SIZE = 36
 const pillWidth = computed(() =>
   props.highlight ? props.highlight.label.length * PILL_FONT_SIZE * 0.6 + PILL_FONT_SIZE * 1.5 : 0,
 )

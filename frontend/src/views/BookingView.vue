@@ -15,7 +15,6 @@ import type { FloorHighlight, FloorPlan } from '../components/FloorView.vue'
 import { api } from '../api/client'
 import floor1Url from '../assets/svg/floors/floor1.svg'
 import floor2Url from '../assets/svg/floors/floor2.svg'
-import cafeteriaPlanUrl from '../assets/svg/cafeteria/cafeteria.svg'
 
 interface BuildingRecord {
   id: number
@@ -173,17 +172,17 @@ onMounted(async () => {
 
 const floor1Plan: FloorPlan = { url: floor1Url, width: 1899, height: 1282 }
 const floor2Plan: FloorPlan = { url: floor2Url, width: 3416, height: 1282 }
-const cafeteriaPlan: FloorPlan = { url: cafeteriaPlanUrl, width: 1899, height: 1282 }
 
-// Inside of the cafeteria walls on cafeteriaPlan, in the plan's pixel coordinates.
+// Cafeteria area of floor1Plan (open space with the round tables, under the
+// left offices), in the plan's pixel coordinates.
 const CAFETERIA_ZONE = {
-  points: '68,68 1831,68 1831,1214 68,1214',
-  center: { x: 950, y: 641 },
+  points: '225,752 545,752 545,1065 22,1065 22,905 225,905',
+  center: { x: 284, y: 909 },
 }
 
 const floorPlan = computed<FloorPlan | undefined>(() => {
-  // A selected cafeteria shows its own layout instead of the whole floor.
-  if (selectedCafeteria.value) return cafeteriaPlan
+  // A selected cafeteria is shown on floor1Plan, where its area is highlighted.
+  if (selectedCafeteria.value) return floor1Plan
   if (selectedBuilding.value == null || selectedFloor.value == null) return undefined
   const floor = floorRecords.value.find((f) => f.id === selectedFloor.value)
   switch (floor?.level) {
