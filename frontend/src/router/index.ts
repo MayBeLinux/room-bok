@@ -6,6 +6,7 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'booking',
     component: () => import('../views/BookingView.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/login',
@@ -30,6 +31,6 @@ router.beforeEach((to) => {
     return { name: 'login' }
   }
   if (to.name === 'login' && auth.isAuthenticated) {
-    return { name: 'home' }
+    return { name: 'booking' }
   }
 })

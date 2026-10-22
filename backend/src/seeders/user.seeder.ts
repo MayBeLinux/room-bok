@@ -15,7 +15,17 @@ export async function seedUsers() {
 
     const hashedPassword = await bcrypt.hash("password", 10);
 
+    // Default accounts to test the login, one per role (documented in the README).
+    const testAccounts = [
+        { firstName: "Admin", lastName: "Test", email: "admin@roombook.test", password: "Admin1234!", role: adminRole },
+        { firstName: "Teacher", lastName: "Test", email: "teacher@roombook.test", password: "Teacher1234!", role: teacherRole },
+        { firstName: "Student", lastName: "Test", email: "student@roombook.test", password: "Student1234!", role: studentRole },
+    ];
+
     const usersData = [
+        ...(await Promise.all(
+            testAccounts.map(async (account) => ({ ...account, password: await bcrypt.hash(account.password, 10) })),
+        )),
         { firstName: "Alice", lastName: "Martin", email: "alice.martin@example.com", password: hashedPassword, role: adminRole },
         { firstName: "Bob", lastName: "Durand", email: "bob.durand@example.com", password: hashedPassword, role: teacherRole },
         { firstName: "Claire", lastName: "Dupont", email: "claire.dupont@example.com", password: hashedPassword, role: teacherRole },
@@ -31,6 +41,11 @@ export async function seedUsers() {
         const user = userRepository.create({ ...userData, role: userData.role });
         await userRepository.save(user);
         console.log("User created:", user.email);
-        }    
+        }
+    }
+
+    console.log("Login test accounts:");
+    for (const account of testAccounts) {
+        console.log(`  ${account.role?.name}: ${account.email} / ${account.password}`);
     }
 }
