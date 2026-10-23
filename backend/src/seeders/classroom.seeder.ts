@@ -3,10 +3,14 @@
 import { AppDataSource } from "../db/data-source";
 import { Classroom } from "../entity/Classroom";
 import { Floor } from "../entity/Floor";
+import { RoomType } from "../entity/RoomType";
 
 export async function seedClassrooms() {
     const classroomRepository = AppDataSource.getRepository(Classroom);
     const floorRepository = AppDataSource.getRepository(Floor);
+    const roomTypeRepository = AppDataSource.getRepository(RoomType);
+
+    const classroomType = await roomTypeRepository.findOneBy({ name: "classroom" });
 
     const floors = await floorRepository.find({ relations: ["building"] });
 
@@ -29,6 +33,7 @@ export async function seedClassrooms() {
                 const classroom = classroomRepository.create({
                     nameRoom: name,
                     floor,
+                    roomType: classroomType ?? undefined,
                     maintenance: false,
                 });
                 await classroomRepository.save(classroom);

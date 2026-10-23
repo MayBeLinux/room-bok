@@ -4,11 +4,13 @@ import * as dotenv from "dotenv";
 
 import { Booking } from "../entity/Booking";
 import { Building } from "../entity/Building";
+import { Cafeteria } from "../entity/Cafeteria";
 import { Classroom } from "../entity/Classroom";
 import { ClassroomEquipment } from "../entity/ClassroomEquipment";
 import { Equipment } from "../entity/Equipment";
 import { Floor } from "../entity/Floor";
 import { Role } from "../entity/Role";
+import { RoomType } from "../entity/RoomType";
 import { User } from "../entity/User";
 
 dotenv.config();
@@ -16,11 +18,13 @@ dotenv.config();
 const entities = [
 	Booking,
 	Building,
+	Cafeteria,
 	Classroom,
 	ClassroomEquipment,
 	Equipment,
 	Floor,
 	Role,
+	RoomType,
 	User,
 ];
 
