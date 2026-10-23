@@ -7,6 +7,7 @@ import { AppDataSource } from "./db/data-source";
 import authRoutes from "./routes/auth.routes";
 import bookingRoutes from "./routes/booking.routes";
 import buildingRoutes from "./routes/building.routes";
+import cafeteriaRoutes from "./routes/cafeteria.routes";
 import equipmentRoutes from "./routes/equipment.routes";
 import floorRoutes from "./routes/floor.routes";
 import roleRoutes from "./routes/role.routes";
@@ -28,6 +29,7 @@ export const createApp = (): Express => {
 	app.use(prefix, floorRoutes);
 	app.use(prefix, roomRoutes);
 	app.use(prefix, buildingRoutes);
+	app.use(prefix, cafeteriaRoutes);
 	app.use(prefix, bookingRoutes);
 	app.use(prefix, equipmentRoutes);
 	app.use(prefix, roomEquipmentRoutes);
